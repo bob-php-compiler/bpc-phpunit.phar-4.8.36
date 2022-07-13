@@ -127,40 +127,6 @@ abstract class PHPUnit_Extensions_Database_TestCase extends PHPUnit_Framework_Te
     }
 
     /**
-     * Creates a new FlatXmlDataSet with the given $xmlFile. (absolute path.)
-     *
-     * @param  string                                             $xmlFile
-     * @return PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet
-     */
-    protected function createFlatXMLDataSet($xmlFile)
-    {
-        return new PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet($xmlFile);
-    }
-
-    /**
-     * Creates a new XMLDataSet with the given $xmlFile. (absolute path.)
-     *
-     * @param  string                                         $xmlFile
-     * @return PHPUnit_Extensions_Database_DataSet_XmlDataSet
-     */
-    protected function createXMLDataSet($xmlFile)
-    {
-        return new PHPUnit_Extensions_Database_DataSet_XmlDataSet($xmlFile);
-    }
-
-    /**
-     * Create a a new MysqlXmlDataSet with the given $xmlFile. (absolute path.)
-     *
-     * @param  string                                              $xmlFile
-     * @return PHPUnit_Extensions_Database_DataSet_MysqlXmlDataSet
-     * @since  Method available since Release 1.0.0
-     */
-    protected function createMySQLXMLDataSet($xmlFile)
-    {
-        return new PHPUnit_Extensions_Database_DataSet_MysqlXmlDataSet($xmlFile);
-    }
-
-    /**
      * Returns an operation factory instance that can be used to instantiate
      * new operations.
      *
