@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use SebastianBergmann\Environment\Runtime;
-
 /**
  * Default utility for PHP sub-processes.
  *
@@ -29,7 +27,7 @@ class PHPUnit_Util_PHP_Default extends PHPUnit_Util_PHP
      */
     public function runJob($job, array $settings = array())
     {
-        $runtime = new Runtime;
+        $runtime = new SebastianBergmann_Environment_Runtime;
         $runtime = $runtime->getBinary() . $this->settingsToParameters($settings);
 
         if ('phpdbg' === PHP_SAPI) {

@@ -7,11 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace SebastianBergmann\Exporter;
-
-use SebastianBergmann\RecursionContext\Context;
-
 /**
  * A nifty utility for visualizing PHP variables.
  *
@@ -23,7 +18,7 @@ use SebastianBergmann\RecursionContext\Context;
  * print $exporter->export(new Exception);
  * </code>
  */
-class Exporter
+class SebastianBergmann_Exporter_Exporter
 {
     /**
      * Exports a value as a string
@@ -58,7 +53,7 @@ class Exporter
         $exporter = new self();
 
         if (!$context) {
-            $context = new Context;
+            $context = new SebastianBergmann_RecursionContext_Context;
         }
 
         $context->add($data);
@@ -169,16 +164,16 @@ class Exporter
         // Some internal classes like SplObjectStorage don't work with the
         // above (fast) mechanism nor with reflection in Zend.
         // Format the output similarly to print_r() in this case
-        if ($value instanceof \SplObjectStorage) {
+        if ($value instanceof SplObjectStorage) {
             // However, the fast method does work in HHVM, and exposes the
             // internal implementation. Hide it again.
-            if (property_exists('\SplObjectStorage', '__storage')) {
+            if (property_exists('SplObjectStorage', '__storage')) {
                 unset($array['__storage']);
-            } elseif (property_exists('\SplObjectStorage', 'storage')) {
+            } elseif (property_exists('SplObjectStorage', 'storage')) {
                 unset($array['storage']);
             }
 
-            if (property_exists('\SplObjectStorage', '__key')) {
+            if (property_exists('SplObjectStorage', '__key')) {
                 unset($array['__key']);
             }
 
@@ -242,7 +237,7 @@ class Exporter
         $whitespace = str_repeat(' ', 4 * $indentation);
 
         if (!$processed) {
-            $processed = new Context;
+            $processed = new SebastianBergmann_RecursionContext_Context;
         }
 
         if (is_array($value)) {

@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
 /**
  * Compares scalar or NULL values for equality.
  */
-class ScalarComparator extends Comparator
+class SebastianBergmann_Comparator_ScalarComparator extends SebastianBergmann_Comparator_Comparator
 {
     /**
      * Returns whether the comparator can compare two values.
@@ -62,7 +60,7 @@ class ScalarComparator extends Comparator
 
         if ($expectedToCompare != $actualToCompare) {
             if (is_string($expected) && is_string($actual)) {
-                throw new ComparisonFailure(
+                throw new SebastianBergmann_Comparator_ComparisonFailure(
                     $expected,
                     $actual,
                     $this->exporter->export($expected),
@@ -72,7 +70,7 @@ class ScalarComparator extends Comparator
                 );
             }
 
-            throw new ComparisonFailure(
+            throw new SebastianBergmann_Comparator_ComparisonFailure(
                 $expected,
                 $actual,
                 // no diff is required

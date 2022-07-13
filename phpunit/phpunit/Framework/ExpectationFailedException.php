@@ -24,7 +24,7 @@ class PHPUnit_Framework_ExpectationFailedException extends PHPUnit_Framework_Ass
      */
     protected $comparisonFailure;
 
-    public function __construct($message, SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = null, Exception $previous = null)
+    public function __construct($message, SebastianBergmann_Comparator_ComparisonFailure $comparisonFailure = null, Exception $previous = null)
     {
         $this->comparisonFailure = $comparisonFailure;
 

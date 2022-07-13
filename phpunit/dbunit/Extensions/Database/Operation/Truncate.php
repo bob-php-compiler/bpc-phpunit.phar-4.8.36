@@ -38,7 +38,7 @@ class PHPUnit_Extensions_Database_Operation_Truncate implements PHPUnit_Extensio
                 $this->disableForeignKeyChecksForMysql($connection);
                 $connection->getConnection()->query($query);
                 $this->enableForeignKeyChecksForMysql($connection);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->enableForeignKeyChecksForMysql($connection);
 
                 if ($e instanceof PDOException) {

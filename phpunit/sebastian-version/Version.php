@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann;
-
 /**
  * @since Class available since Release 1.0.0
  */
-class Version
+class SebastianBergmann_Version
 {
     private $path;
     private $release;

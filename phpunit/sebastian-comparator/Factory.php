@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
 /**
  * Factory for comparators which compare values for equality.
  */
-class Factory
+class SebastianBergmann_Comparator_Factory
 {
     /**
      * @var Comparator[]
@@ -30,18 +28,18 @@ class Factory
      */
     public function __construct()
     {
-        $this->register(new TypeComparator);
-        $this->register(new ScalarComparator);
-        $this->register(new NumericComparator);
-        $this->register(new DoubleComparator);
-        $this->register(new ArrayComparator);
-        $this->register(new ResourceComparator);
-        $this->register(new ObjectComparator);
-        $this->register(new ExceptionComparator);
-        $this->register(new SplObjectStorageComparator);
-        $this->register(new DOMNodeComparator);
-        $this->register(new MockObjectComparator);
-        $this->register(new DateTimeComparator);
+        $this->register(new SebastianBergmann_Comparator_TypeComparator);
+        $this->register(new SebastianBergmann_Comparator_ScalarComparator);
+        $this->register(new SebastianBergmann_Comparator_NumericComparator);
+        $this->register(new SebastianBergmann_Comparator_DoubleComparator);
+        $this->register(new SebastianBergmann_Comparator_ArrayComparator);
+        $this->register(new SebastianBergmann_Comparator_ResourceComparator);
+        $this->register(new SebastianBergmann_Comparator_ObjectComparator);
+        $this->register(new SebastianBergmann_Comparator_ExceptionComparator);
+        $this->register(new SebastianBergmann_Comparator_SplObjectStorageComparator);
+        $this->register(new SebastianBergmann_Comparator_DOMNodeComparator);
+        $this->register(new SebastianBergmann_Comparator_MockObjectComparator);
+        $this->register(new SebastianBergmann_Comparator_DateTimeComparator);
     }
 
     /**
@@ -82,7 +80,7 @@ class Factory
      *
      * @param Comparator $comparator The registered comparator
      */
-    public function register(Comparator $comparator)
+    public function register(SebastianBergmann_Comparator_Comparator $comparator)
     {
         array_unshift($this->comparators, $comparator);
 
@@ -96,7 +94,7 @@ class Factory
      *
      * @param Comparator $comparator The unregistered comparator
      */
-    public function unregister(Comparator $comparator)
+    public function unregister(SebastianBergmann_Comparator_Comparator $comparator)
     {
         foreach ($this->comparators as $key => $_comparator) {
             if ($comparator === $_comparator) {

@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use SebastianBergmann\Environment\Runtime;
-
 /**
  * Windows utility for PHP sub-processes.
  *
@@ -32,7 +30,7 @@ class PHPUnit_Util_PHP_Windows extends PHPUnit_Util_PHP_Default
      */
     public function runJob($job, array $settings = array())
     {
-        $runtime = new Runtime;
+        $runtime = new SebastianBergmann_Environment_Runtime;
 
         if (false === $stdout_handle = tmpfile()) {
             throw new PHPUnit_Framework_Exception(

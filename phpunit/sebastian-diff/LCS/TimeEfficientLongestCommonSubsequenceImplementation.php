@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Diff\LCS;
-
 /**
  * Time-efficient implementation of longest common subsequence calculation.
  */
-class TimeEfficientImplementation implements LongestCommonSubsequence
+class SebastianBergmann_Diff_LCS_TimeEfficientImplementation implements SebastianBergmann_Diff_LCS_LongestCommonSubsequence
 {
     /**
      * Calculates the longest common subsequence of two arrays.
@@ -26,10 +24,10 @@ class TimeEfficientImplementation implements LongestCommonSubsequence
     public function calculate(array $from, array $to)
     {
         $common     = array();
-        $fromLength = \count($from);
-        $toLength   = \count($to);
+        $fromLength = count($from);
+        $toLength   = count($to);
         $width      = $fromLength + 1;
-        $matrix     = new \SplFixedArray($width * ($toLength + 1));
+        $matrix     = new SplFixedArray($width * ($toLength + 1));
 
         for ($i = 0; $i <= $fromLength; ++$i) {
             $matrix[$i] = 0;
@@ -42,7 +40,7 @@ class TimeEfficientImplementation implements LongestCommonSubsequence
         for ($i = 1; $i <= $fromLength; ++$i) {
             for ($j = 1; $j <= $toLength; ++$j) {
                 $o          = ($j * $width) + $i;
-                $matrix[$o] = \max(
+                $matrix[$o] = max(
                     $matrix[$o - 1],
                     $matrix[$o - $width],
                     $from[$i - 1] === $to[$j - 1] ? $matrix[$o - $width - 1] + 1 : 0
@@ -69,6 +67,6 @@ class TimeEfficientImplementation implements LongestCommonSubsequence
             }
         }
 
-        return \array_reverse($common);
+        return array_reverse($common);
     }
 }

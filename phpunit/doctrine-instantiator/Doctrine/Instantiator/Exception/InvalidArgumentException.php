@@ -17,17 +17,12 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Instantiator\Exception;
-
-use InvalidArgumentException as BaseInvalidArgumentException;
-use ReflectionClass;
-
 /**
  * Exception for invalid arguments provided to the instantiator
  *
  * @author Marco Pivetta <ocramius@gmail.com>
  */
-class InvalidArgumentException extends BaseInvalidArgumentException implements ExceptionInterface
+class Doctrine_Instantiator_Exception_InvalidArgumentException extends InvalidArgumentException implements Doctrine_Instantiator_Exception_ExceptionInterface
 {
     /**
      * @param string $className

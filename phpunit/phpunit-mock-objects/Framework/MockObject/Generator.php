@@ -8,10 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use Doctrine\Instantiator\Instantiator;
-use Doctrine\Instantiator\Exception\InvalidArgumentException as InstantiatorInvalidArgumentException;
-use Doctrine\Instantiator\Exception\UnexpectedValueException as InstantiatorUnexpectedValueException;
-
 if (!function_exists('trait_exists')) {
     function trait_exists($traitname, $autoload = true)
     {
@@ -247,9 +243,9 @@ class PHPUnit_Framework_MockObject_Generator
             }
         } else {
             try {
-                $instantiator = new Instantiator;
+                $instantiator = new Doctrine_Instantiator_Instantiator;
                 $object       = $instantiator->instantiate($className);
-            } catch (InstantiatorUnexpectedValueException $exception) {
+            } catch (Doctrine_Instantiator_Exception_UnexpectedValueException $exception) {
                 if ($exception->getPrevious()) {
                     $exception = $exception->getPrevious();
                 }

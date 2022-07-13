@@ -8,15 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
-use DOMDocument;
-use DOMNode;
-
 /**
  * Compares DOMNode instances for equality.
  */
-class DOMNodeComparator extends ObjectComparator
+class SebastianBergmann_Comparator_DOMNodeComparator extends SebastianBergmann_Comparator_ObjectComparator
 {
     /**
      * Returns whether the comparator can compare two values.
@@ -54,7 +49,7 @@ class DOMNodeComparator extends ObjectComparator
                 $type = 'nodes';
             }
 
-            throw new ComparisonFailure(
+            throw new SebastianBergmann_Comparator_ComparisonFailure(
                 $expected,
                 $actual,
                 $expectedAsString,

@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
 /**
  * Compares resources for equality.
  */
-class ResourceComparator extends Comparator
+class SebastianBergmann_Comparator_ResourceComparator extends SebastianBergmann_Comparator_Comparator
 {
     /**
      * Returns whether the comparator can compare two values.
@@ -41,7 +39,7 @@ class ResourceComparator extends Comparator
     public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false)
     {
         if ($actual != $expected) {
-            throw new ComparisonFailure(
+            throw new SebastianBergmann_Comparator_ComparisonFailure(
                 $expected,
                 $actual,
                 $this->exporter->export($expected),

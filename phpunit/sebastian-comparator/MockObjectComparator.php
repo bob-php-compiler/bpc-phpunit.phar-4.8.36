@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
 /**
  * Compares PHPUnit_Framework_MockObject_MockObject instances for equality.
  */
-class MockObjectComparator extends ObjectComparator
+class SebastianBergmann_Comparator_MockObjectComparator extends SebastianBergmann_Comparator_ObjectComparator
 {
     /**
      * Returns whether the comparator can compare two values.
@@ -24,7 +22,7 @@ class MockObjectComparator extends ObjectComparator
      */
     public function accepts($expected, $actual)
     {
-        return $expected instanceof \PHPUnit_Framework_MockObject_MockObject && $actual instanceof \PHPUnit_Framework_MockObject_MockObject;
+        return $expected instanceof PHPUnit_Framework_MockObject_MockObject && $actual instanceof PHPUnit_Framework_MockObject_MockObject;
     }
 
     /**

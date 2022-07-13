@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
 /**
  * Compares numerical values for equality.
  */
-class NumericComparator extends ScalarComparator
+class SebastianBergmann_Comparator_NumericComparator extends SebastianBergmann_Comparator_ScalarComparator
 {
     /**
      * Returns whether the comparator can compare two values.
@@ -51,7 +49,7 @@ class NumericComparator extends ScalarComparator
         if ((is_infinite($actual) xor is_infinite($expected)) ||
             (is_nan($actual) or is_nan($expected)) ||
             abs($actual - $expected) > $delta) {
-            throw new ComparisonFailure(
+            throw new SebastianBergmann_Comparator_ComparisonFailure(
                 $expected,
                 $actual,
                 '',

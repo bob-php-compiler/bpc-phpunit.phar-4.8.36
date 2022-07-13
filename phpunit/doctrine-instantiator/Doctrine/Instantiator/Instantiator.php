@@ -17,20 +17,12 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Instantiator;
-
-use Closure;
-use Doctrine\Instantiator\Exception\InvalidArgumentException;
-use Doctrine\Instantiator\Exception\UnexpectedValueException;
-use Exception;
-use ReflectionClass;
-
 /**
  * {@inheritDoc}
  *
  * @author Marco Pivetta <ocramius@gmail.com>
  */
-final class Instantiator implements InstantiatorInterface
+final class Doctrine_Instantiator_Instantiator implements Doctrine_Instantiator_InstantiatorInterface
 {
     /**
      * Markers used internally by PHP to define whether {@see \unserialize} should invoke
@@ -129,13 +121,13 @@ final class Instantiator implements InstantiatorInterface
     private function getReflectionClass($className)
     {
         if (! class_exists($className)) {
-            throw InvalidArgumentException::fromNonExistingClass($className);
+            throw Doctrine_Instantiator_Exception_InvalidArgumentException::fromNonExistingClass($className);
         }
 
         $reflection = new ReflectionClass($className);
 
         if ($reflection->isAbstract()) {
-            throw InvalidArgumentException::fromAbstractClass($reflection);
+            throw Doctrine_Instantiator_Exception_InvalidArgumentException::fromAbstractClass($reflection);
         }
 
         return $reflection;
@@ -152,7 +144,7 @@ final class Instantiator implements InstantiatorInterface
     private function checkIfUnSerializationIsSupported(ReflectionClass $reflectionClass, $serializedString)
     {
         set_error_handler(function ($code, $message, $file, $line) use ($reflectionClass, & $error) {
-            $error = UnexpectedValueException::fromUncleanUnSerialization(
+            $error = Doctrine_Instantiator_Exception_UnexpectedValueException::fromUncleanUnSerialization(
                 $reflectionClass,
                 $message,
                 $code,
@@ -185,7 +177,7 @@ final class Instantiator implements InstantiatorInterface
         } catch (Exception $exception) {
             restore_error_handler();
 
-            throw UnexpectedValueException::fromSerializationTriggeredException($reflectionClass, $exception);
+            throw Doctrine_Instantiator_Exception_UnexpectedValueException::fromSerializationTriggeredException($reflectionClass, $exception);
         }
     }
 

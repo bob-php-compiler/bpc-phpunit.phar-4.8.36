@@ -7,9 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-use SebastianBergmann\Diff\Differ;
-
 /**
  * ...
  *
@@ -59,7 +56,7 @@ class PHPUnit_Framework_Constraint_StringMatches extends PHPUnit_Framework_Const
         $this->string = implode("\n", $from);
         $other        = implode("\n", $to);
 
-        $differ = new Differ("--- Expected\n+++ Actual\n");
+        $differ = new SebastianBergmann_Diff_Differ("--- Expected\n+++ Actual\n");
 
         return $differ->diff($this->string, $other);
     }

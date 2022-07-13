@@ -8,12 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
 
 /**
- * Compares \SplObjectStorage instances for equality.
+ * Compares SplObjectStorage instances for equality.
  */
-class SplObjectStorageComparator extends Comparator
+class SebastianBergmann_Comparator_SplObjectStorageComparator extends SebastianBergmann_Comparator_Comparator
 {
     /**
      * Returns whether the comparator can compare two values.
@@ -24,7 +23,7 @@ class SplObjectStorageComparator extends Comparator
      */
     public function accepts($expected, $actual)
     {
-        return $expected instanceof \SplObjectStorage && $actual instanceof \SplObjectStorage;
+        return $expected instanceof SplObjectStorage && $actual instanceof SplObjectStorage;
     }
 
     /**
@@ -42,7 +41,7 @@ class SplObjectStorageComparator extends Comparator
     {
         foreach ($actual as $object) {
             if (!$expected->contains($object)) {
-                throw new ComparisonFailure(
+                throw new SebastianBergmann_Comparator_ComparisonFailure(
                     $expected,
                     $actual,
                     $this->exporter->export($expected),
@@ -55,7 +54,7 @@ class SplObjectStorageComparator extends Comparator
 
         foreach ($expected as $object) {
             if (!$actual->contains($object)) {
-                throw new ComparisonFailure(
+                throw new SebastianBergmann_Comparator_ComparisonFailure(
                     $expected,
                     $actual,
                     $this->exporter->export($expected),

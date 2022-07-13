@@ -7,13 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace SebastianBergmann\Diff\LCS;
-
 /**
  * Interface for implementations of longest common subsequence calculation.
  */
-interface LongestCommonSubsequence
+interface SebastianBergmann_Diff_LCS_LongestCommonSubsequence
 {
     /**
      * Calculates the longest common subsequence of two arrays.

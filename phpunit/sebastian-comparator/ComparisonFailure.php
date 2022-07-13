@@ -8,14 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
-use SebastianBergmann\Diff\Differ;
-
 /**
  * Thrown when an assertion for string equality failed.
  */
-class ComparisonFailure extends \RuntimeException
+class SebastianBergmann_Comparator_ComparisonFailure extends RuntimeException
 {
     /**
      * Expected value of the retrieval which does not match $actual.
@@ -114,7 +110,7 @@ class ComparisonFailure extends \RuntimeException
             return '';
         }
 
-        $differ = new Differ("\n--- Expected\n+++ Actual\n");
+        $differ = new SebastianBergmann_Diff_Differ("\n--- Expected\n+++ Actual\n");
 
         return $differ->diff($this->expectedAsString, $this->actualAsString);
     }

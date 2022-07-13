@@ -8,11 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Environment;
-
 /**
  */
-class Console
+class SebastianBergmann_Environment_Console
 {
     const STDIN  = 0;
     const STDOUT = 1;

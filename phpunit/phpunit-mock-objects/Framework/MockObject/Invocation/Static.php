@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use SebastianBergmann\Exporter\Exporter;
-
 /**
  * Represents a static invocation.
  *
@@ -85,7 +83,7 @@ class PHPUnit_Framework_MockObject_Invocation_Static implements PHPUnit_Framewor
      */
     public function toString()
     {
-        $exporter = new Exporter;
+        $exporter = new SebastianBergmann_Exporter_Exporter;
 
         return sprintf(
             '%s::%s(%s)',

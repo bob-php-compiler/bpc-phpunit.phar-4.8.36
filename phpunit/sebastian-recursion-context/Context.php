@@ -8,13 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\RecursionContext;
-
 /**
  * A context containing previously processed arrays and objects
  * when recursively processing a value.
  */
-final class Context
+final class SebastianBergmann_RecursionContext_Context
 {
     /**
      * @var array[]
@@ -22,7 +20,7 @@ final class Context
     private $arrays;
 
     /**
-     * @var \SplObjectStorage
+     * @var SplObjectStorage
      */
     private $objects;
 
@@ -32,7 +30,7 @@ final class Context
     public function __construct()
     {
         $this->arrays  = array();
-        $this->objects = new \SplObjectStorage;
+        $this->objects = new SplObjectStorage;
     }
 
     /**

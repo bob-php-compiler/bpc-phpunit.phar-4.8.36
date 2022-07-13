@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
 /**
  * Compares doubles for equality.
  */
-class DoubleComparator extends NumericComparator
+class SebastianBergmann_Comparator_DoubleComparator extends SebastianBergmann_Comparator_NumericComparator
 {
     /**
      * Smallest value available in PHP.

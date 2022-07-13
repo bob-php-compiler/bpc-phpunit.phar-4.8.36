@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
 /**
  * Compares DateTimeInterface instances for equality.
  */
-class DateTimeComparator extends ObjectComparator
+class SebastianBergmann_Comparator_DateTimeComparator extends SebastianBergmann_Comparator_ObjectComparator
 {
     /**
      * Returns whether the comparator can compare two values.
@@ -24,8 +22,8 @@ class DateTimeComparator extends ObjectComparator
      */
     public function accepts($expected, $actual)
     {
-        return ($expected instanceof \DateTime || $expected instanceof \DateTimeInterface) &&
-            ($actual instanceof \DateTime || $actual instanceof \DateTimeInterface);
+        return ($expected instanceof DateTime || $expected instanceof DateTimeInterface) &&
+            ($actual instanceof DateTime || $actual instanceof DateTimeInterface);
     }
 
     /**
@@ -42,14 +40,14 @@ class DateTimeComparator extends ObjectComparator
      */
     public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false, array &$processed = array())
     {
-        $delta = new \DateInterval(sprintf('PT%sS', abs($delta)));
+        $delta = new DateInterval(sprintf('PT%sS', abs($delta)));
 
         $expectedLower = clone $expected;
         $expectedUpper = clone $expected;
 
         if ($actual < $expectedLower->sub($delta) ||
             $actual > $expectedUpper->add($delta)) {
-            throw new ComparisonFailure(
+            throw new SebastianBergmann_Comparator_ComparisonFailure(
                 $expected,
                 $actual,
                 $this->dateTimeToString($expected),

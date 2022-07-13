@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Diff;
-
-class Line
+class SebastianBergmann_Diff_Line
 {
     const ADDED     = 1;
     const REMOVED   = 2;

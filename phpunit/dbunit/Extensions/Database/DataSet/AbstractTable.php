@@ -184,7 +184,7 @@ class PHPUnit_Extensions_Database_DataSet_AbstractTable implements PHPUnit_Exten
                         } else {
                             $values[] = $this->getValue($i, $columnName);
                         }
-                    } catch (\InvalidArgumentException $ex) {
+                    } catch (InvalidArgumentException $ex) {
                         $values[] = $this->getValue($i, $columnName) . ': no row';
                     }
                 } else {

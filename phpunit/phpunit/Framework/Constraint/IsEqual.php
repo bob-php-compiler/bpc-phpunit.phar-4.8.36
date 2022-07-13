@@ -114,7 +114,7 @@ class PHPUnit_Framework_Constraint_IsEqual extends PHPUnit_Framework_Constraint
             return true;
         }
 
-        $comparatorFactory = SebastianBergmann\Comparator\Factory::getInstance();
+        $comparatorFactory = SebastianBergmann_Comparator_Factory::getInstance();
 
         try {
             $comparator = $comparatorFactory->getComparatorFor(
@@ -129,7 +129,7 @@ class PHPUnit_Framework_Constraint_IsEqual extends PHPUnit_Framework_Constraint
                 $this->canonicalize,
                 $this->ignoreCase
             );
-        } catch (SebastianBergmann\Comparator\ComparisonFailure $f) {
+        } catch (SebastianBergmann_Comparator_ComparisonFailure $f) {
             if ($returnResult) {
                 return false;
             }

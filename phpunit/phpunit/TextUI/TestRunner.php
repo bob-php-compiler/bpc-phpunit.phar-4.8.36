@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use SebastianBergmann\Environment\Runtime;
-
 /**
  * A TestRunner for the Command Line Interface (CLI)
  * PHP SAPI Module.
@@ -66,7 +64,7 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
 
         $this->codeCoverageFilter = $filter;
         $this->loader             = $loader;
-        $this->runtime            = new Runtime;
+        $this->runtime            = new SebastianBergmann_Environment_Runtime;
     }
 
     /**

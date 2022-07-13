@@ -17,14 +17,12 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Instantiator;
-
 /**
  * Instantiator provides utility methods to build objects without invoking their constructors
  *
  * @author Marco Pivetta <ocramius@gmail.com>
  */
-interface InstantiatorInterface
+interface Doctrine_Instantiator_InstantiatorInterface
 {
     /**
      * @param string $className

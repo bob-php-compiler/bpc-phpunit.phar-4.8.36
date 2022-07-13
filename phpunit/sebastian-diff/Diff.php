@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Diff;
-
-class Diff
+class SebastianBergmann_Diff_Diff
 {
     /**
      * @var string

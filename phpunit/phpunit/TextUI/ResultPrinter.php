@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use SebastianBergmann\Environment\Console;
-
 /**
  * Prints the result of a TextUI TestRunner run.
  *
@@ -143,7 +141,7 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
             throw PHPUnit_Util_InvalidArgumentHelper::factory(5, 'integer or "max"');
         }
 
-        $console            = new Console;
+        $console            = new SebastianBergmann_Environment_Console;
         $maxNumberOfColumns = $console->getNumberOfColumns();
 
         if ($numberOfColumns == 'max' || $numberOfColumns > $maxNumberOfColumns) {

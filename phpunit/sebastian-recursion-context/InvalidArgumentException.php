@@ -8,10 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\RecursionContext;
 
 /**
  */
-final class InvalidArgumentException extends \InvalidArgumentException implements Exception
+final class SebastianBergmann_RecursionContext_InvalidArgumentException extends InvalidArgumentException implements SebastianBergmann_RecursionContext_Exception
 {
 }

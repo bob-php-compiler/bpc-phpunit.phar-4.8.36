@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
 /**
  * Compares arrays for equality.
  */
-class ArrayComparator extends Comparator
+class SebastianBergmann_Comparator_ArrayComparator extends SebastianBergmann_Comparator_Comparator
 {
     /**
      * Returns whether the comparator can compare two values.
@@ -114,7 +112,7 @@ class ArrayComparator extends Comparator
         $actString .= ')';
 
         if (!$equal) {
-            throw new ComparisonFailure(
+            throw new SebastianBergmann_Comparator_ComparisonFailure(
                 $expected,
                 $actual,
                 $expString,

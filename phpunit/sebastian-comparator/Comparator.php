@@ -8,14 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
-use SebastianBergmann\Exporter\Exporter;
-
 /**
  * Abstract base class for comparators which compare values for equality.
  */
-abstract class Comparator
+abstract class SebastianBergmann_Comparator_Comparator
 {
     /**
      * @var Factory
@@ -29,13 +25,13 @@ abstract class Comparator
 
     public function __construct()
     {
-        $this->exporter = new Exporter;
+        $this->exporter = new SebastianBergmann_Exporter_Exporter;
     }
 
     /**
      * @param Factory $factory
      */
-    public function setFactory(Factory $factory)
+    public function setFactory(SebastianBergmann_Comparator_Factory $factory)
     {
         $this->factory = $factory;
     }

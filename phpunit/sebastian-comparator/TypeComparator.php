@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
 /**
  * Compares values for type equality.
  */
-class TypeComparator extends Comparator
+class SebastianBergmann_Comparator_TypeComparator extends SebastianBergmann_Comparator_Comparator
 {
     /**
      * Returns whether the comparator can compare two values.
@@ -41,7 +39,7 @@ class TypeComparator extends Comparator
     public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false)
     {
         if (gettype($expected) != gettype($actual)) {
-            throw new ComparisonFailure(
+            throw new SebastianBergmann_Comparator_ComparisonFailure(
                 $expected,
                 $actual,
                 // we don't need a diff

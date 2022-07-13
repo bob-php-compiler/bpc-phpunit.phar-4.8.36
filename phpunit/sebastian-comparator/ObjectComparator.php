@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Comparator;
-
 /**
  * Compares objects for equality.
  */
-class ObjectComparator extends ArrayComparator
+class SebastianBergmann_Comparator_ObjectComparator extends SebastianBergmann_Comparator_ArrayComparator
 {
     /**
      * Returns whether the comparator can compare two values.
@@ -78,7 +76,7 @@ class ObjectComparator extends ArrayComparator
                     $processed
                 );
             } catch (ComparisonFailure $e) {
-                throw new ComparisonFailure(
+                throw new SebastianBergmann_Comparator_ComparisonFailure(
                     $expected,
                     $actual,
                     // replace "Array" with "MyClass object"

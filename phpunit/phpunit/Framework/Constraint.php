@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use SebastianBergmann\Exporter\Exporter;
-
 /**
  * Abstract base class for constraints which can be applied to any value.
  *
@@ -21,7 +19,7 @@ abstract class PHPUnit_Framework_Constraint implements Countable, PHPUnit_Framew
 
     public function __construct()
     {
-        $this->exporter = new Exporter;
+        $this->exporter = new SebastianBergmann_Exporter_Exporter;
     }
 
     /**
@@ -95,7 +93,7 @@ abstract class PHPUnit_Framework_Constraint implements Countable, PHPUnit_Framew
      *
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
-    protected function fail($other, $description, SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = null)
+    protected function fail($other, $description, SebastianBergmann_Comparator_ComparisonFailure $comparisonFailure = null)
     {
         $failureDescription = sprintf(
             'Failed asserting that %s.',

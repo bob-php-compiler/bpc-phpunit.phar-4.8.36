@@ -17,18 +17,12 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Instantiator\Exception;
-
-use Exception;
-use ReflectionClass;
-use UnexpectedValueException as BaseUnexpectedValueException;
-
 /**
  * Exception for given parameters causing invalid/unexpected state on instantiation
  *
  * @author Marco Pivetta <ocramius@gmail.com>
  */
-class UnexpectedValueException extends BaseUnexpectedValueException implements ExceptionInterface
+class Doctrine_Instantiator_Exception_UnexpectedValueException extends UnexpectedValueException implements Doctrine_Instantiator_Exception_ExceptionInterface
 {
     /**
      * @param ReflectionClass $reflectionClass

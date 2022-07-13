@@ -28,7 +28,6 @@
  *          forceCoversAnnotation="false"
  *          mapTestClassNameToCoveredClassName="false"
  *          printerClass="PHPUnit_TextUI_ResultPrinter"
- *          processIsolation="false"
  *          stopOnError="false"
  *          stopOnFailure="false"
  *          stopOnIncomplete="false"
@@ -108,7 +107,6 @@
  *     <log type="json" target="/tmp/logfile.json"/>
  *     <log type="plain" target="/tmp/logfile.txt"/>
  *     <log type="tap" target="/tmp/logfile.tap"/>
- *     <log type="junit" target="/tmp/logfile.xml" logIncompleteSkipped="false"/>
  *     <log type="testdox-html" target="/tmp/testdox.html"/>
  *     <log type="testdox-text" target="/tmp/testdox.txt"/>
  *   </logging>
@@ -396,13 +394,6 @@ class PHPUnit_Util_Configuration
                         30
                     );
                 }
-            } elseif ($type == 'junit') {
-                if ($log->hasAttribute('logIncompleteSkipped')) {
-                    $result['logIncompleteSkipped'] = $this->getBoolean(
-                        (string) $log->getAttribute('logIncompleteSkipped'),
-                        false
-                    );
-                }
             } elseif ($type == 'coverage-text') {
                 if ($log->hasAttribute('showUncoveredFiles')) {
                     $result['coverageTextShowUncoveredFiles'] = $this->getBoolean(
@@ -643,13 +634,6 @@ class PHPUnit_Util_Configuration
         if ($root->hasAttribute('mapTestClassNameToCoveredClassName')) {
             $result['mapTestClassNameToCoveredClassName'] = $this->getBoolean(
                 (string) $root->getAttribute('mapTestClassNameToCoveredClassName'),
-                false
-            );
-        }
-
-        if ($root->hasAttribute('processIsolation')) {
-            $result['processIsolation'] = $this->getBoolean(
-                (string) $root->getAttribute('processIsolation'),
                 false
             );
         }

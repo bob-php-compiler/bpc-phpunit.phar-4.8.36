@@ -8,12 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Environment;
-
 /**
  * Utility class for HHVM/PHP environment handling.
  */
-class Runtime
+class SebastianBergmann_Environment_Runtime
 {
     /**
      * @var string

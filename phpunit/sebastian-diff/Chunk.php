@@ -8,9 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SebastianBergmann\Diff;
-
-class Chunk
+class SebastianBergmann_Diff_Chunk
 {
     /**
      * @var int
