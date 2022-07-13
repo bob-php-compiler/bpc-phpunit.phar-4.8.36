@@ -106,14 +106,6 @@ class PHPUnit_Framework_MockObject_Invocation_Static implements PHPUnit_Framewor
     protected function cloneObject($original)
     {
         $cloneable = null;
-        $object    = new ReflectionObject($original);
-
-        // Check the blacklist before asking PHP reflection to work around
-        // https://bugs.php.net/bug.php?id=53967
-        if ($object->isInternal() &&
-            isset(self::$uncloneableExtensions[$object->getExtensionName()])) {
-            $cloneable = false;
-        }
 
         if ($cloneable === null) {
             foreach (self::$uncloneableClasses as $class) {
@@ -124,13 +116,9 @@ class PHPUnit_Framework_MockObject_Invocation_Static implements PHPUnit_Framewor
             }
         }
 
-        if ($cloneable === null && method_exists($object, 'isCloneable')) {
-            $cloneable = $object->isCloneable();
-        }
-
-        if ($cloneable === null && $object->hasMethod('__clone')) {
-            $method    = $object->getMethod('__clone');
-            $cloneable = $method->isPublic();
+        $methods = get_class_methods($original);
+        if ($cloneable === null && in_array('__clone', $methods)) {
+            $cloneable = true;
         }
 
         if ($cloneable === null) {
