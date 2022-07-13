@@ -27,7 +27,7 @@ class SebastianBergmann_Diff_LCS_TimeEfficientImplementation implements Sebastia
         $fromLength = count($from);
         $toLength   = count($to);
         $width      = $fromLength + 1;
-        $matrix     = new SplFixedArray($width * ($toLength + 1));
+        $matrix     = array_fill(0, $width * ($toLength + 1), '');
 
         for ($i = 0; $i <= $fromLength; ++$i) {
             $matrix[$i] = 0;

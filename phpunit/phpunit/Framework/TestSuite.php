@@ -266,14 +266,6 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
             throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
         }
 
-        if (file_exists($filename) && substr($filename, -5) == '.phpt') {
-            $this->addTest(
-                new PHPUnit_Extensions_PhptTestCase($filename)
-            );
-
-            return;
-        }
-
         // The given file may contain further stub classes in addition to the
         // test class itself. Figure out the actual test class.
         $classes    = get_declared_classes();

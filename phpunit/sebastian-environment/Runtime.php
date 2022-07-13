@@ -19,17 +19,6 @@ class SebastianBergmann_Environment_Runtime
     private static $binary;
 
     /**
-     * Returns true when Xdebug is supported or
-     * the runtime used is PHPDBG (PHP >= 7.0).
-     *
-     * @return bool
-     */
-    public function canCollectCodeCoverage()
-    {
-        return $this->hasXdebug() || $this->hasPHPDBGCodeCoverage();
-    }
-
-    /**
      * Returns the path to the binary of the current runtime.
      * Appends ' --php' to the path when the runtime is HHVM.
      *
@@ -177,16 +166,5 @@ class SebastianBergmann_Environment_Runtime
     public function isPHPDBG()
     {
         return PHP_SAPI === 'phpdbg' && !$this->isHHVM();
-    }
-
-    /**
-     * Returns true when the runtime used is PHP with the PHPDBG SAPI
-     * and the phpdbg_*_oplog() functions are available (PHP >= 7.0).
-     *
-     * @return bool
-     */
-    public function hasPHPDBGCodeCoverage()
-    {
-        return $this->isPHPDBG() && function_exists('phpdbg_start_oplog');
     }
 }

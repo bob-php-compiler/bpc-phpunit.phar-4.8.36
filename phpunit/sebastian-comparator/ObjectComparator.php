@@ -40,7 +40,7 @@ class SebastianBergmann_Comparator_ObjectComparator extends SebastianBergmann_Co
     public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false, array &$processed = array())
     {
         if (get_class($actual) !== get_class($expected)) {
-            throw new ComparisonFailure(
+            throw new SebastianBergmann_Comparator_ComparisonFailure(
                 $expected,
                 $actual,
                 $this->exporter->export($expected),
@@ -75,7 +75,7 @@ class SebastianBergmann_Comparator_ObjectComparator extends SebastianBergmann_Co
                     $ignoreCase,
                     $processed
                 );
-            } catch (ComparisonFailure $e) {
+            } catch (SebastianBergmann_Comparator_ComparisonFailure $e) {
                 throw new SebastianBergmann_Comparator_ComparisonFailure(
                     $expected,
                     $actual,

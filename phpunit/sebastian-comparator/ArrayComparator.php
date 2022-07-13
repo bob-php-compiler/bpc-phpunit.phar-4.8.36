@@ -77,7 +77,7 @@ class SebastianBergmann_Comparator_ArrayComparator extends SebastianBergmann_Com
                     $this->exporter->export($key),
                     $this->exporter->shortenedExport($actual[$key])
                 );
-            } catch (ComparisonFailure $e) {
+            } catch (SebastianBergmann_Comparator_ComparisonFailure $e) {
                 $expString .= sprintf(
                     "    %s => %s\n",
                     $this->exporter->export($key),

@@ -36,8 +36,8 @@ class SebastianBergmann_Comparator_Factory
         $this->register(new SebastianBergmann_Comparator_ResourceComparator);
         $this->register(new SebastianBergmann_Comparator_ObjectComparator);
         $this->register(new SebastianBergmann_Comparator_ExceptionComparator);
-        $this->register(new SebastianBergmann_Comparator_SplObjectStorageComparator);
-        $this->register(new SebastianBergmann_Comparator_DOMNodeComparator);
+//        $this->register(new SebastianBergmann_Comparator_SplObjectStorageComparator);
+//        $this->register(new SebastianBergmann_Comparator_DOMNodeComparator);
         $this->register(new SebastianBergmann_Comparator_MockObjectComparator);
         $this->register(new SebastianBergmann_Comparator_DateTimeComparator);
     }

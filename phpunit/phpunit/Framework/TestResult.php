@@ -66,13 +66,6 @@ class PHPUnit_Framework_TestResult implements Countable
     protected $topTestSuite = null;
 
     /**
-     * Code Coverage information.
-     *
-     * @var PHP_CodeCoverage
-     */
-    protected $codeCoverage;
-
-    /**
      * @var bool
      */
     protected $convertErrorsToExceptions = true;
@@ -523,18 +516,6 @@ class PHPUnit_Framework_TestResult implements Countable
     }
 
     /**
-     * Returns whether code coverage information should be collected.
-     *
-     * @return bool If code coverage should be collected
-     *
-     * @since  Method available since Release 3.2.0
-     */
-    public function getCollectCodeCoverageInformation()
-    {
-        return $this->codeCoverage !== null;
-    }
-
-    /**
      * Runs a TestCase.
      *
      * @param PHPUnit_Framework_Test $test
@@ -555,8 +536,7 @@ class PHPUnit_Framework_TestResult implements Countable
 
         if ($this->convertErrorsToExceptions) {
             $oldErrorHandler = set_error_handler(
-                array('PHPUnit_Util_ErrorHandler', 'handleError'),
-                E_ALL | E_STRICT
+                array('PHPUnit_Util_ErrorHandler', 'handleError')
             );
 
             if ($oldErrorHandler === null) {
@@ -569,29 +549,7 @@ class PHPUnit_Framework_TestResult implements Countable
         PHP_Timer::start();
 
         try {
-            if (!$test instanceof PHPUnit_Framework_Warning &&
-                $test->getSize() != PHPUnit_Util_Test::UNKNOWN &&
-                $this->beStrictAboutTestSize &&
-                extension_loaded('pcntl') && class_exists('PHP_Invoker')) {
-                switch ($test->getSize()) {
-                    case PHPUnit_Util_Test::SMALL:
-                        $_timeout = $this->timeoutForSmallTests;
-                        break;
-
-                    case PHPUnit_Util_Test::MEDIUM:
-                        $_timeout = $this->timeoutForMediumTests;
-                        break;
-
-                    case PHPUnit_Util_Test::LARGE:
-                        $_timeout = $this->timeoutForLargeTests;
-                        break;
-                }
-
-                $invoker = new PHP_Invoker;
-                $invoker->invoke(array($test, 'runBare'), array(), $_timeout);
-            } else {
-                $test->runBare();
-            }
+            $test->runBare();
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             $failure = true;
 
@@ -691,30 +649,6 @@ class PHPUnit_Framework_TestResult implements Countable
     public function stop()
     {
         $this->stop = true;
-    }
-
-    /**
-     * Returns the PHP_CodeCoverage object.
-     *
-     * @return PHP_CodeCoverage
-     *
-     * @since  Method available since Release 3.5.0
-     */
-    public function getCodeCoverage()
-    {
-        return $this->codeCoverage;
-    }
-
-    /**
-     * Sets the PHP_CodeCoverage object.
-     *
-     * @param PHP_CodeCoverage $codeCoverage
-     *
-     * @since Method available since Release 3.6.0
-     */
-    public function setCodeCoverage(PHP_CodeCoverage $codeCoverage)
-    {
-        $this->codeCoverage = $codeCoverage;
     }
 
     /**
@@ -1019,11 +953,10 @@ class PHPUnit_Framework_TestResult implements Countable
      * Returns the class hierarchy for a given class.
      *
      * @param string $className
-     * @param bool   $asReflectionObjects
      *
      * @return array
      */
-    protected function getHierarchy($className, $asReflectionObjects = false)
+    protected function getHierarchy($className)
     {
         $classes = array($className);
 
