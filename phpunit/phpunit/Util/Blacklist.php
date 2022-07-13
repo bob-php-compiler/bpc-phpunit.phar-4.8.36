@@ -15,32 +15,23 @@
  */
 class PHPUnit_Util_Blacklist
 {
+
     /**
      * @var array
      */
     public static $blacklistedClassNames = array(
-        'File_Iterator'                              => 1,
-        'PHP_CodeCoverage'                           => 1,
-        'PHP_Invoker'                                => 1,
-        'PHP_Timer'                                  => 1,
-        'PHP_Token'                                  => 1,
-        'PHPUnit_Framework_TestCase'                 => 2,
-        'PHPUnit_Extensions_Database_TestCase'       => 2,
-        'PHPUnit_Framework_MockObject_Generator'     => 2,
-        'PHPUnit_Extensions_SeleniumTestCase'        => 2,
-        'Text_Template'                              => 1,
-        'Symfony\Component\Yaml\Yaml'                => 1,
-        'SebastianBergmann\Diff\Diff'                => 1,
-        'SebastianBergmann\Environment\Runtime'      => 1,
-        'SebastianBergmann\Comparator\Comparator'    => 1,
-        'SebastianBergmann\Exporter\Exporter'        => 1,
-        'SebastianBergmann\GlobalState\Snapshot'     => 1,
-        'SebastianBergmann\RecursionContext\Context' => 1,
-        'SebastianBergmann\Version'                  => 1,
-        'Composer\Autoload\ClassLoader'              => 1,
-        'Doctrine\Instantiator\Instantiator'         => 1,
-        'phpDocumentor\Reflection\DocBlock'          => 1,
-        'Prophecy\Prophet'                           => 1
+        'File_Iterator'                              => 'php-file-iterator/',
+        'PHP_Timer'                                  => 'php-timer/',
+        'PHPUnit_Framework_TestCase'                 => 'phpunit/',
+        'PHPUnit_Extensions_Database_TestCase'       => 'dbunit/Extensions/',
+        'PHPUnit_Framework_MockObject_Generator'     => 'phpunit-mock-objects/Framework/',
+        'Text_Template'                              => 'php-text-template/',
+        'SebastianBergmann_Diff_Diff'                => 'sebastian-diff/',
+        'SebastianBergmann_Environment_Runtime'      => 'sebastian-environment/',
+        'SebastianBergmann_Comparator_Comparator'    => 'sebastian-comparator/',
+        'SebastianBergmann_Exporter_Exporter'        => 'sebastian-exporter/',
+        'SebastianBergmann_RecursionContext_Context' => 'sebastian-recursion-context/',
+        'SebastianBergmann_Version'                  => 'sebastian-version/'
     );
 
     /**
@@ -74,7 +65,7 @@ class PHPUnit_Util_Blacklist
         $this->initialize();
 
         foreach (self::$directories as $directory) {
-            if (strpos($file, $directory) === 0) {
+            if (strpos($file, $directory) > 0) {
                 return true;
             }
         }
@@ -87,16 +78,9 @@ class PHPUnit_Util_Blacklist
         if (self::$directories === null) {
             self::$directories = array();
 
-            foreach (self::$blacklistedClassNames as $className => $parent) {
+            foreach (self::$blacklistedClassNames as $className => $directory) {
                 if (!class_exists($className)) {
                     continue;
-                }
-
-                $reflector = new ReflectionClass($className);
-                $directory = $reflector->getFileName();
-
-                for ($i = 0; $i < $parent; $i++) {
-                    $directory = dirname($directory);
                 }
 
                 self::$directories[] = $directory;

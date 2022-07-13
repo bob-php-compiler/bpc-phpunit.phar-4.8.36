@@ -3032,16 +3032,11 @@ abstract class PHPUnit_Framework_Assert
             throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'valid attribute name');
         }
 
-        $class = new ReflectionClass($className);
+        // TODO: check static
+        $attributes = get_class_vars($className);
 
-        while ($class) {
-            $attributes = $class->getStaticProperties();
-
-            if (array_key_exists($attributeName, $attributes)) {
-                return $attributes[$attributeName];
-            }
-
-            $class = $class->getParentClass();
+        if (array_key_exists($attributeName, $attributes)) {
+            return $attributes[$attributeName];
         }
 
         throw new PHPUnit_Framework_Exception(
@@ -3079,30 +3074,13 @@ abstract class PHPUnit_Framework_Assert
             throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'valid attribute name');
         }
 
-        try {
-            $attribute = new ReflectionProperty($object, $attributeName);
-        } catch (ReflectionException $e) {
-            $reflector = new ReflectionObject($object);
-
-            while ($reflector = $reflector->getParentClass()) {
-                try {
-                    $attribute = $reflector->getProperty($attributeName);
-                    break;
-                } catch (ReflectionException $e) {
-                }
-            }
-        }
+        $attributes = get_object_vars($object);
 
         if (isset($attribute)) {
             if (!$attribute || $attribute->isPublic()) {
                 return $object->$attributeName;
             }
-
-            $attribute->setAccessible(true);
-            $value = $attribute->getValue($object);
-            $attribute->setAccessible(false);
-
-            return $value;
+            // TODO: 原来可以将protected或private属性设置为public后,获取value, 修改之后不可以了
         }
 
         throw new PHPUnit_Framework_Exception(

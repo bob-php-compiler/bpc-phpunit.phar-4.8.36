@@ -1093,31 +1093,17 @@ class PHPUnit_Framework_TestResult implements Countable
      */
     protected function getHierarchy($className, $asReflectionObjects = false)
     {
-        if ($asReflectionObjects) {
-            $classes = array(new ReflectionClass($className));
-        } else {
-            $classes = array($className);
-        }
+        $classes = array($className);
 
         $done = false;
 
         while (!$done) {
-            if ($asReflectionObjects) {
-                $class = new ReflectionClass(
-                    $classes[count($classes) - 1]->getName()
-                );
-            } else {
-                $class = new ReflectionClass($classes[count($classes) - 1]);
-            }
+            $class = $classes[count($classes) - 1];
 
-            $parent = $class->getParentClass();
+            $parent = get_parent_class($class);
 
             if ($parent !== false) {
-                if ($asReflectionObjects) {
-                    $classes[] = $parent;
-                } else {
-                    $classes[] = $parent->getName();
-                }
+                $classes[] = $parent;
             } else {
                 $done = true;
             }

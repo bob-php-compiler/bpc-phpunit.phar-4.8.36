@@ -68,7 +68,7 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
     }
 
     /**
-     * @param PHPUnit_Framework_Test|ReflectionClass $test
+     * @param PHPUnit_Framework_Test $test
      * @param array                                  $arguments
      *
      * @return PHPUnit_Framework_TestResult
@@ -77,10 +77,6 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
      */
     public static function run($test, array $arguments = array())
     {
-        if ($test instanceof ReflectionClass) {
-            $test = new PHPUnit_Framework_TestSuite($test);
-        }
-
         if ($test instanceof PHPUnit_Framework_Test) {
             $aTestRunner = new self;
 
@@ -115,21 +111,21 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
 
         if (!empty($arguments['excludeGroups'])) {
             $filterFactory->addFilter(
-                new ReflectionClass('PHPUnit_Runner_Filter_Group_Exclude'),
+                'PHPUnit_Runner_Filter_Group_Exclude',
                 $arguments['excludeGroups']
             );
         }
 
         if (!empty($arguments['groups'])) {
             $filterFactory->addFilter(
-                new ReflectionClass('PHPUnit_Runner_Filter_Group_Include'),
+                'PHPUnit_Runner_Filter_Group_Include',
                 $arguments['groups']
             );
         }
 
         if ($arguments['filter']) {
             $filterFactory->addFilter(
-                new ReflectionClass('PHPUnit_Runner_Filter_Test'),
+                'PHPUnit_Runner_Filter_Test',
                 $arguments['filter']
             );
         }
@@ -223,9 +219,7 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
                 if (isset($arguments['printer']) &&
                     is_string($arguments['printer']) &&
                     class_exists($arguments['printer'], false)) {
-                    $class = new ReflectionClass($arguments['printer']);
-
-                    if ($class->isSubclassOf('PHPUnit_TextUI_ResultPrinter')) {
+                    if (is_subclass_of($arguments['printer'], 'PHPUnit_TextUI_ResultPrinter')) {
                         $printerClass = $arguments['printer'];
                     }
                 }
@@ -807,12 +801,8 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
                     if (count($listener['arguments']) == 0) {
                         $listener = new $listener['class'];
                     } else {
-                        $listenerClass = new ReflectionClass(
-                            $listener['class']
-                        );
-                        $listener      = $listenerClass->newInstanceArgs(
-                            $listener['arguments']
-                        );
+                        $listenerClass = $listener['class'];
+                        $listener      = new $listenerClass($listener['arguments']);
                     }
 
                     if ($listener instanceof PHPUnit_Framework_TestListener) {

@@ -78,11 +78,15 @@ abstract class PHPUnit_Extensions_Database_DB_MetaData implements PHPUnit_Extens
         if (isset(self::$metaDataClassMap[$driverName])) {
             $className = self::$metaDataClassMap[$driverName];
 
-            if ($className instanceof ReflectionClass) {
-                return $className->newInstance($pdo, $schema);
-            } else {
-                return self::registerClassWithDriver($className, $driverName)->newInstance($pdo, $schema);
+            if (!class_exists($className)) {
+                throw new PHPUnit_Extensions_Database_Exception("Specified class for {$driverName} driver ({$className}) does not exist.");
             }
+
+            if (!is_subclass_of($className, 'PHPUnit_Extensions_Database_DB_MetaData')) {
+                throw new PHPUnit_Extensions_Database_Exception("Specified class for {$driverName} driver ({$className}) does not extend PHPUnit_Extensions_Database_DB_MetaData.");
+            }
+
+            return new $className($pdo, $schema);
         } else {
             throw new PHPUnit_Extensions_Database_Exception("Could not find a meta data driver for {$driverName} pdo driver.");
         }
@@ -94,11 +98,8 @@ abstract class PHPUnit_Extensions_Database_DB_MetaData implements PHPUnit_Extens
      * require the file. The $pdoDriver can be determined by the value of the
      * PDO::ATTR_DRIVER_NAME attribute for a pdo object.
      *
-     * A reflection of the $className is returned.
-     *
      * @param  string          $className
      * @param  string          $pdoDriver
-     * @return ReflectionClass
      */
     public static function registerClassWithDriver($className, $pdoDriver)
     {
@@ -106,10 +107,7 @@ abstract class PHPUnit_Extensions_Database_DB_MetaData implements PHPUnit_Extens
             throw new PHPUnit_Extensions_Database_Exception("Specified class for {$pdoDriver} driver ({$className}) does not exist.");
         }
 
-        $reflection = new ReflectionClass($className);
-        if ($reflection->isSubclassOf('PHPUnit_Extensions_Database_DB_MetaData')) {
-            return self::$metaDataClassMap[$pdoDriver] = $reflection;
-        } else {
+        if (!is_subclass_of($className, 'PHPUnit_Extensions_Database_DB_MetaData')) {
             throw new PHPUnit_Extensions_Database_Exception("Specified class for {$pdoDriver} driver ({$className}) does not extend PHPUnit_Extensions_Database_DB_MetaData.");
         }
     }

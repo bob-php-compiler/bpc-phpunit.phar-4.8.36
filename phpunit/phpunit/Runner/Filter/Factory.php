@@ -19,12 +19,12 @@ class PHPUnit_Runner_Filter_Factory
     private $filters = array();
 
     /**
-     * @param ReflectionClass $filter
-     * @param mixed           $args
+     * @param string $filter
+     * @param mixed  $args
      */
-    public function addFilter(ReflectionClass $filter, $args)
+    public function addFilter($filter, $args)
     {
-        if (!$filter->isSubclassOf('RecursiveFilterIterator')) {
+        if (!is_subclass_of($filter, 'RecursiveFilterIterator')) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Class "%s" does not extend RecursiveFilterIterator',
@@ -43,7 +43,7 @@ class PHPUnit_Runner_Filter_Factory
     {
         foreach ($this->filters as $filter) {
             list($class, $args) = $filter;
-            $iterator           = $class->newInstance($iterator, $args, $suite);
+            $iterator           = new $class($iterator, $args, $suite);
         }
 
         return $iterator;

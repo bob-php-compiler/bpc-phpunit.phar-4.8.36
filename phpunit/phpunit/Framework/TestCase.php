@@ -288,11 +288,9 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
      */
     public function toString()
     {
-        $class = new ReflectionClass($this);
-
         $buffer = sprintf(
             '%s::%s',
-            $class->name,
+            get_class($this),
             $this->getName(false)
         );
 
@@ -506,7 +504,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                     );
                 }
             }
-        } catch (ReflectionException $e) {
+        } catch (Exception $e) {
         }
     }
 
@@ -895,18 +893,19 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             );
         }
 
-        try {
-            $class  = new ReflectionClass($this);
-            $method = $class->getMethod($this->name);
-        } catch (ReflectionException $e) {
-            $this->fail($e->getMessage());
+        $methodName = $this->name;
+        if (!method_exists($this, $methodName)) {
+            $this->fail(
+                sprintf(
+                    'test method not exist %s::%s.',
+                    get_class($this),
+                    $methodName
+                )
+            );
         }
 
         try {
-            $testResult = $method->invokeArgs(
-                $this,
-                array_merge($this->data, $this->dependencyInput)
-            );
+            $testResult = call_user_func_array(array($this, $methodName), array_merge($this->data, $this->dependencyInput));
         } catch (Throwable $_e) {
             $e = $_e;
         } catch (Exception $_e) {
@@ -923,11 +922,9 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                     $checkException = false;
                 }
 
-                $reflector = new ReflectionClass($this->expectedException);
-
                 if ($this->expectedException === 'PHPUnit_Framework_Exception' ||
                     $this->expectedException === '\PHPUnit_Framework_Exception' ||
-                    $reflector->isSubclassOf('PHPUnit_Framework_Exception')) {
+                    is_subclass_of($this->expectedException, 'PHPUnit_Framework_Exception')) {
                     $checkException = true;
                 }
             }

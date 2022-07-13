@@ -42,9 +42,7 @@ class PHPUnit_Framework_Constraint_ClassHasAttribute extends PHPUnit_Framework_C
      */
     protected function matches($other)
     {
-        $class = new ReflectionClass($other);
-
-        return $class->hasProperty($this->attributeName);
+        return property_exists($other, $this->attributeName);
     }
 
     /**

@@ -700,12 +700,7 @@ class PHPUnit_TextUI_Command
         }
 
         if (class_exists($loaderClass, false)) {
-            $class = new ReflectionClass($loaderClass);
-
-            if ($class->implementsInterface('PHPUnit_Runner_TestSuiteLoader') &&
-                $class->isInstantiable()) {
-                return $class->newInstance();
-            }
+            return new $loaderClass();
         }
 
         if ($loaderClass == 'PHPUnit_Runner_StandardTestSuiteLoader') {
