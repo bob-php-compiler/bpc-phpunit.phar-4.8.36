@@ -566,25 +566,6 @@ class PHPUnit_Framework_TestResult implements Countable
             }
         }
 
-        $collectCodeCoverage = $this->codeCoverage !== null &&
-                               !$test instanceof PHPUnit_Extensions_SeleniumTestCase &&
-                               !$test instanceof PHPUnit_Framework_Warning;
-
-        if ($collectCodeCoverage) {
-            // We need to blacklist test source files when no whitelist is used.
-            if (!$this->codeCoverage->filter()->hasWhitelist()) {
-                $classes = $this->getHierarchy(get_class($test), true);
-
-                foreach ($classes as $class) {
-                    $this->codeCoverage->filter()->addFileToBlacklist(
-                        $class->getFileName()
-                    );
-                }
-            }
-
-            $this->codeCoverage->start($test);
-        }
-
         PHP_Timer::start();
 
         try {
@@ -637,55 +618,6 @@ class PHPUnit_Framework_TestResult implements Countable
         if ($this->beStrictAboutTestsThatDoNotTestAnything &&
             $test->getNumAssertions() == 0) {
             $risky = true;
-        }
-
-        if ($collectCodeCoverage) {
-            $append           = !$risky && !$incomplete && !$skipped;
-            $linesToBeCovered = array();
-            $linesToBeUsed    = array();
-
-            if ($append && $test instanceof PHPUnit_Framework_TestCase) {
-                $linesToBeCovered = PHPUnit_Util_Test::getLinesToBeCovered(
-                    get_class($test),
-                    $test->getName(false)
-                );
-
-                $linesToBeUsed = PHPUnit_Util_Test::getLinesToBeUsed(
-                    get_class($test),
-                    $test->getName(false)
-                );
-            }
-
-            try {
-                $this->codeCoverage->stop(
-                    $append,
-                    $linesToBeCovered,
-                    $linesToBeUsed
-                );
-            } catch (PHP_CodeCoverage_Exception_UnintentionallyCoveredCode $cce) {
-                $this->addFailure(
-                    $test,
-                    new PHPUnit_Framework_UnintentionallyCoveredCodeError(
-                        'This test executed code that is not listed as code to be covered or used:' .
-                        PHP_EOL . $cce->getMessage()
-                    ),
-                    $time
-                );
-            } catch (PHPUnit_Framework_InvalidCoversTargetException $cce) {
-                $this->addFailure(
-                    $test,
-                    new PHPUnit_Framework_InvalidCoversTargetError(
-                        $cce->getMessage()
-                    ),
-                    $time
-                );
-            } catch (PHP_CodeCoverage_Exception $cce) {
-                $error = true;
-
-                if (!isset($e)) {
-                    $e = $cce;
-                }
-            }
         }
 
         if ($errorHandlerSet === true) {

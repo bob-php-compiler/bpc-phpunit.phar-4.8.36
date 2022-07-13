@@ -8,14 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use SebastianBergmann\GlobalState\Snapshot;
-use SebastianBergmann\GlobalState\Restorer;
-use SebastianBergmann\GlobalState\Blacklist;
-use SebastianBergmann\Diff\Differ;
-use SebastianBergmann\Exporter\Exporter;
-use Prophecy\Exception\Prediction\PredictionException;
-use Prophecy\Prophet;
-
 /**
  * A TestCase defines the fixture to run multiple tests.
  *
@@ -74,11 +66,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     protected $backupGlobals = null;
 
     /**
-     * @var array
-     */
-    protected $backupGlobalsBlacklist = array();
-
-    /**
      * Enable or disable the backup and restoration of static attributes.
      * Overwrite this attribute in a child class of TestCase.
      * Setting this attribute in setUp() has no effect!
@@ -86,11 +73,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
      * @var bool
      */
     protected $backupStaticAttributes = null;
-
-    /**
-     * @var array
-     */
-    protected $backupStaticAttributesBlacklist = array();
 
     /**
      * Whether or not this test is to be run in a separate PHP process.
@@ -248,16 +230,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
      * @var int
      */
     private $outputBufferingLevel;
-
-    /**
-     * @var SebastianBergmann\GlobalState\Snapshot
-     */
-    private $snapshot;
-
-    /**
-     * @var Prophecy\Prophet
-     */
-    private $prophet;
 
     /**
      * @var bool
@@ -478,34 +450,29 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
         $this->expectedExceptionCode          = $exceptionCode;
     }
 
-    /**
-     * @since  Method available since Release 3.4.0
-     */
-    protected function setExpectedExceptionFromAnnotation()
+    public function expectException($exceptionName)
     {
-        try {
-            $expectedException = PHPUnit_Util_Test::getExpectedException(
-                get_class($this),
-                $this->name
-            );
+        $this->expectedException = $exceptionName;
+    }
 
-            if ($expectedException !== false) {
-                $this->setExpectedException(
-                    $expectedException['class'],
-                    $expectedException['message'],
-                    $expectedException['code']
-                );
+    public function expectExceptionMessage($message)
+    {
+        $this->expectedExceptionMessage = $message;
+    }
 
-                if (!empty($expectedException['message_regex'])) {
-                    $this->setExpectedExceptionRegExp(
-                        $expectedException['class'],
-                        $expectedException['message_regex'],
-                        $expectedException['code']
-                    );
-                }
-            }
-        } catch (Exception $e) {
-        }
+    public function expectExceptionCode($code)
+    {
+        $this->expectedExceptionCode = $exceptionCode;
+    }
+
+    public function expectExceptionMessageRegExp($regularExpression)
+    {
+        $this->expectedExceptionMessageRegExp = $regularExpression;
+    }
+
+    public function expectExceptionMessageMatches($regularExpression)
+    {
+        $this->expectedExceptionMessageRegExp = $regularExpression;
     }
 
     /**
@@ -532,26 +499,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             if ($useErrorHandler !== null) {
                 $this->setUseErrorHandler($useErrorHandler);
             }
-        } catch (ReflectionException $e) {
-        }
-    }
-
-    /**
-     * @since Method available since Release 3.6.0
-     */
-    protected function checkRequirements()
-    {
-        if (!$this->name || !method_exists($this, $this->name)) {
-            return;
-        }
-
-        $missingRequirements = PHPUnit_Util_Test::getMissingRequirements(
-            get_class($this),
-            $this->name
-        );
-
-        if (!empty($missingRequirements)) {
-            $this->markTestSkipped(implode(PHP_EOL, $missingRequirements));
+        } catch (Exception $e) {
         }
     }
 
@@ -624,103 +572,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             return;
         }
 
-        if ($this->runTestInSeparateProcess === true &&
-            $this->inIsolation !== true &&
-            !$this instanceof PHPUnit_Extensions_SeleniumTestCase &&
-            !$this instanceof PHPUnit_Extensions_PhptTestCase) {
-            $class = new ReflectionClass($this);
-
-            $template = new Text_Template(
-                __DIR__ . '/../Util/PHP/Template/TestCaseMethod.tpl'
-            );
-
-            if ($this->preserveGlobalState) {
-                $constants     = PHPUnit_Util_GlobalState::getConstantsAsString();
-                $globals       = PHPUnit_Util_GlobalState::getGlobalsAsString();
-                $includedFiles = PHPUnit_Util_GlobalState::getIncludedFilesAsString();
-                $iniSettings   = PHPUnit_Util_GlobalState::getIniSettingsAsString();
-            } else {
-                $constants     = '';
-                if (!empty($GLOBALS['__PHPUNIT_BOOTSTRAP'])) {
-                    $globals     = '$GLOBALS[\'__PHPUNIT_BOOTSTRAP\'] = ' . var_export($GLOBALS['__PHPUNIT_BOOTSTRAP'], true) . ";\n";
-                } else {
-                    $globals     = '';
-                }
-                $includedFiles = '';
-                $iniSettings   = '';
-            }
-
-            $coverage                                = $result->getCollectCodeCoverageInformation()       ? 'true' : 'false';
-            $isStrictAboutTestsThatDoNotTestAnything = $result->isStrictAboutTestsThatDoNotTestAnything() ? 'true' : 'false';
-            $isStrictAboutOutputDuringTests          = $result->isStrictAboutOutputDuringTests()          ? 'true' : 'false';
-            $isStrictAboutTestSize                   = $result->isStrictAboutTestSize()                   ? 'true' : 'false';
-            $isStrictAboutTodoAnnotatedTests         = $result->isStrictAboutTodoAnnotatedTests()         ? 'true' : 'false';
-
-            if (defined('PHPUNIT_COMPOSER_INSTALL')) {
-                $composerAutoload = var_export(PHPUNIT_COMPOSER_INSTALL, true);
-            } else {
-                $composerAutoload = '\'\'';
-            }
-
-            if (defined('__PHPUNIT_PHAR__')) {
-                $phar = var_export(__PHPUNIT_PHAR__, true);
-            } else {
-                $phar = '\'\'';
-            }
-
-            if ($result->getCodeCoverage()) {
-                $codeCoverageFilter = $result->getCodeCoverage()->filter();
-            } else {
-                $codeCoverageFilter = null;
-            }
-
-            $data               = var_export(serialize($this->data), true);
-            $dataName           = var_export($this->dataName, true);
-            $dependencyInput    = var_export(serialize($this->dependencyInput), true);
-            $includePath        = var_export(get_include_path(), true);
-            $codeCoverageFilter = var_export(serialize($codeCoverageFilter), true);
-            // must do these fixes because TestCaseMethod.tpl has unserialize('{data}') in it, and we can't break BC
-            // the lines above used to use addcslashes() rather than var_export(), which breaks null byte escape sequences
-            $data               = "'." . $data . ".'";
-            $dataName           = "'.(" . $dataName . ").'";
-            $dependencyInput    = "'." . $dependencyInput . ".'";
-            $includePath        = "'." . $includePath . ".'";
-            $codeCoverageFilter = "'." . $codeCoverageFilter . ".'";
-
-            $configurationFilePath = (isset($GLOBALS['__PHPUNIT_CONFIGURATION_FILE']) ? $GLOBALS['__PHPUNIT_CONFIGURATION_FILE'] : '');
-
-            $template->setVar(
-                array(
-                    'composerAutoload'                        => $composerAutoload,
-                    'phar'                                    => $phar,
-                    'filename'                                => $class->getFileName(),
-                    'className'                               => $class->getName(),
-                    'methodName'                              => $this->name,
-                    'collectCodeCoverageInformation'          => $coverage,
-                    'data'                                    => $data,
-                    'dataName'                                => $dataName,
-                    'dependencyInput'                         => $dependencyInput,
-                    'constants'                               => $constants,
-                    'globals'                                 => $globals,
-                    'include_path'                            => $includePath,
-                    'included_files'                          => $includedFiles,
-                    'iniSettings'                             => $iniSettings,
-                    'isStrictAboutTestsThatDoNotTestAnything' => $isStrictAboutTestsThatDoNotTestAnything,
-                    'isStrictAboutOutputDuringTests'          => $isStrictAboutOutputDuringTests,
-                    'isStrictAboutTestSize'                   => $isStrictAboutTestSize,
-                    'isStrictAboutTodoAnnotatedTests'         => $isStrictAboutTodoAnnotatedTests,
-                    'codeCoverageFilter'                      => $codeCoverageFilter,
-                    'configurationFilePath'                   => $configurationFilePath
-                )
-            );
-
-            $this->prepareTemplate($template);
-
-            $php = PHPUnit_Util_PHP::factory();
-            $php->runTestJob($template->render(), $this, $result);
-        } else {
-            $result->run($this);
-        }
+        $result->run($this);
 
         if ($this->useErrorHandler !== null) {
             $result->convertErrorsToExceptions($oldErrorHandlerSetting);
@@ -738,7 +590,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     {
         $this->numAssertions = 0;
 
-        $this->snapshotGlobalState();
         $this->startOutputBuffering();
         clearstatcache();
         $currentWorkingDirectory = getcwd();
@@ -746,17 +597,11 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
         $hookMethods = PHPUnit_Util_Test::getHookMethods(get_class($this));
 
         try {
-            $hasMetRequirements = false;
-            $this->checkRequirements();
-            $hasMetRequirements = true;
-
             if ($this->inIsolation) {
                 foreach ($hookMethods['beforeClass'] as $method) {
                     $this->$method();
                 }
             }
-
-            $this->setExpectedExceptionFromAnnotation();
 
             foreach ($hookMethods['before'] as $method) {
                 $this->$method();
@@ -777,9 +622,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             $this->status        = PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE;
             $this->statusMessage = $e->getMessage();
-        } catch (PredictionException $e) {
-            $this->status        = PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE;
-            $this->statusMessage = $e->getMessage();
         } catch (Throwable $_e) {
             $e = $_e;
         } catch (Exception $_e) {
@@ -793,20 +635,17 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
         // Clean up the mock objects.
         $this->mockObjects = array();
-        $this->prophet     = null;
 
         // Tear down the fixture. An exception raised in tearDown() will be
         // caught and passed on when no exception was raised before.
         try {
-            if ($hasMetRequirements) {
-                foreach ($hookMethods['after'] as $method) {
-                    $this->$method();
-                }
+            foreach ($hookMethods['after'] as $method) {
+                $this->$method();
+            }
 
-                if ($this->inIsolation) {
-                    foreach ($hookMethods['afterClass'] as $method) {
-                        $this->$method();
-                    }
+            if ($this->inIsolation) {
+                foreach ($hookMethods['afterClass'] as $method) {
+                    $this->$method();
                 }
             }
         } catch (Throwable $_e) {
@@ -832,8 +671,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
         if ($currentWorkingDirectory != getcwd()) {
             chdir($currentWorkingDirectory);
         }
-
-        $this->restoreGlobalState();
 
         // Clean up INI settings.
         foreach ($this->iniSettings as $varName => $oldValue) {
@@ -864,10 +701,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
         // Workaround for missing "finally".
         if (isset($e)) {
-            if ($e instanceof PredictionException) {
-                $e = new PHPUnit_Framework_AssertionFailedError($e->getMessage());
-            }
-
             if (!$e instanceof Exception) {
                 // Rethrow Error directly on PHP 7 as onNotSuccessfulTest does not support it
                 throw $e;
@@ -998,28 +831,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
             $mockObject->__phpunit_verify();
         }
-
-        if ($this->prophet !== null) {
-            try {
-                $this->prophet->checkPredictions();
-            } catch (Throwable $e) {
-                /* Intentionally left empty */
-            } catch (Exception $e) {
-                /* Intentionally left empty */
-            }
-
-            foreach ($this->prophet->getProphecies() as $objectProphecy) {
-                foreach ($objectProphecy->getMethodProphecies() as $methodProphecies) {
-                    foreach ($methodProphecies as $methodProphecy) {
-                        $this->numAssertions += count($methodProphecy->getCheckedPredictions());
-                    }
-                }
-            }
-
-            if (isset($e)) {
-                throw $e;
-            }
-        }
     }
 
     /**
@@ -1104,24 +915,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
         if (is_null($this->backupStaticAttributes) &&
             is_bool($backupStaticAttributes)) {
             $this->backupStaticAttributes = $backupStaticAttributes;
-        }
-    }
-
-    /**
-     * @param bool $runTestInSeparateProcess
-     *
-     * @throws PHPUnit_Framework_Exception
-     *
-     * @since  Method available since Release 3.4.0
-     */
-    public function setRunTestInSeparateProcess($runTestInSeparateProcess)
-    {
-        if (is_bool($runTestInSeparateProcess)) {
-            if ($this->runTestInSeparateProcess === null) {
-                $this->runTestInSeparateProcess = $runTestInSeparateProcess;
-            }
-        } else {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'boolean');
         }
     }
 
@@ -1547,20 +1340,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     }
 
     /**
-     * @param string|null $classOrInterface
-     *
-     * @return \Prophecy\Prophecy\ObjectProphecy
-     *
-     * @throws \LogicException
-     *
-     * @since  Method available since Release 4.5.0
-     */
-    protected function prophesize($classOrInterface = null)
-    {
-        return $this->getProphet()->prophesize($classOrInterface);
-    }
-
-    /**
      * Adds a value to the assertion counter.
      *
      * @param int $count
@@ -1807,7 +1586,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                 $buffer .= sprintf(' with data set "%s"', $this->dataName);
             }
 
-            $exporter = new Exporter;
+            $exporter = new SebastianBergmann_Exporter_Exporter;
 
             if ($includeData) {
                 $buffer .= sprintf(' (%s)', $exporter->shortenedRecursiveExport($this->data));
@@ -2035,169 +1814,5 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
         $this->outputBufferingActive = false;
         $this->outputBufferingLevel  = ob_get_level();
-    }
-
-    private function snapshotGlobalState()
-    {
-        $backupGlobals = $this->backupGlobals === null || $this->backupGlobals === true;
-
-        if ($this->runTestInSeparateProcess || $this->inIsolation ||
-            (!$backupGlobals && !$this->backupStaticAttributes)) {
-            return;
-        }
-
-        $this->snapshot = $this->createGlobalStateSnapshot($backupGlobals);
-    }
-
-    private function restoreGlobalState()
-    {
-        if (!$this->snapshot instanceof Snapshot) {
-            return;
-        }
-
-        $backupGlobals = $this->backupGlobals === null || $this->backupGlobals === true;
-
-        if ($this->disallowChangesToGlobalState) {
-            try {
-                $this->compareGlobalStateSnapshots(
-                    $this->snapshot,
-                    $this->createGlobalStateSnapshot($backupGlobals)
-                );
-            } catch (PHPUnit_Framework_RiskyTestError $rte) {
-                // Intentionally left empty
-            }
-        }
-
-        $restorer = new Restorer;
-
-        if ($backupGlobals) {
-            $restorer->restoreGlobalVariables($this->snapshot);
-        }
-
-        if ($this->backupStaticAttributes) {
-            $restorer->restoreStaticAttributes($this->snapshot);
-        }
-
-        $this->snapshot = null;
-
-        if (isset($rte)) {
-            throw $rte;
-        }
-    }
-
-    /**
-     * @param bool $backupGlobals
-     *
-     * @return Snapshot
-     */
-    private function createGlobalStateSnapshot($backupGlobals)
-    {
-        $blacklist = new Blacklist;
-
-        foreach ($this->backupGlobalsBlacklist as $globalVariable) {
-            $blacklist->addGlobalVariable($globalVariable);
-        }
-
-        if (!defined('PHPUNIT_TESTSUITE')) {
-            $blacklist->addClassNamePrefix('PHPUnit');
-            $blacklist->addClassNamePrefix('File_Iterator');
-            $blacklist->addClassNamePrefix('PHP_CodeCoverage');
-            $blacklist->addClassNamePrefix('PHP_Invoker');
-            $blacklist->addClassNamePrefix('PHP_Timer');
-            $blacklist->addClassNamePrefix('PHP_Token');
-            $blacklist->addClassNamePrefix('Symfony');
-            $blacklist->addClassNamePrefix('Text_Template');
-            $blacklist->addClassNamePrefix('Doctrine\Instantiator');
-
-            foreach ($this->backupStaticAttributesBlacklist as $class => $attributes) {
-                foreach ($attributes as $attribute) {
-                    $blacklist->addStaticAttribute($class, $attribute);
-                }
-            }
-        }
-
-        return new Snapshot(
-            $blacklist,
-            $backupGlobals,
-            $this->backupStaticAttributes,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false
-        );
-    }
-
-    /**
-     * @param Snapshot $before
-     * @param Snapshot $after
-     *
-     * @throws PHPUnit_Framework_RiskyTestError
-     */
-    private function compareGlobalStateSnapshots(Snapshot $before, Snapshot $after)
-    {
-        $backupGlobals = $this->backupGlobals === null || $this->backupGlobals === true;
-
-        if ($backupGlobals) {
-            $this->compareGlobalStateSnapshotPart(
-                $before->globalVariables(),
-                $after->globalVariables(),
-                "--- Global variables before the test\n+++ Global variables after the test\n"
-            );
-
-            $this->compareGlobalStateSnapshotPart(
-                $before->superGlobalVariables(),
-                $after->superGlobalVariables(),
-                "--- Super-global variables before the test\n+++ Super-global variables after the test\n"
-            );
-        }
-
-        if ($this->backupStaticAttributes) {
-            $this->compareGlobalStateSnapshotPart(
-                $before->staticAttributes(),
-                $after->staticAttributes(),
-                "--- Static attributes before the test\n+++ Static attributes after the test\n"
-            );
-        }
-    }
-
-    /**
-     * @param array  $before
-     * @param array  $after
-     * @param string $header
-     *
-     * @throws PHPUnit_Framework_RiskyTestError
-     */
-    private function compareGlobalStateSnapshotPart(array $before, array $after, $header)
-    {
-        if ($before != $after) {
-            $differ   = new Differ($header);
-            $exporter = new Exporter;
-
-            $diff = $differ->diff(
-                $exporter->export($before),
-                $exporter->export($after)
-            );
-
-            throw new PHPUnit_Framework_RiskyTestError(
-                $diff
-            );
-        }
-    }
-
-    /**
-     * @return Prophecy\Prophet
-     *
-     * @since Method available since Release 4.5.0
-     */
-    private function getProphet()
-    {
-        if ($this->prophet === null) {
-            $this->prophet = new Prophet;
-        }
-
-        return $this->prophet;
     }
 }

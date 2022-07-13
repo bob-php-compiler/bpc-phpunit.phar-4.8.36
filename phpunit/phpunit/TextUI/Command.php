@@ -53,10 +53,6 @@ class PHPUnit_TextUI_Command
         'include-path='        => null,
         'list-groups'          => null,
         'loader='              => null,
-        'log-json='            => null,
-        'log-junit='           => null,
-        'log-tap='             => null,
-        'process-isolation'    => null,
         'repeat='              => null,
         'stderr'               => null,
         'stop-on-error'        => null,
@@ -71,7 +67,6 @@ class PHPUnit_TextUI_Command
         'disallow-todo-tests'  => null,
         'strict-global-state'  => null,
         'strict'               => null,
-        'tap'                  => null,
         'testdox'              => null,
         'testdox-html='        => null,
         'testdox-text='        => null,
@@ -95,7 +90,7 @@ class PHPUnit_TextUI_Command
      */
     public static function main($exit = true)
     {
-        $command = new static;
+        $command = new self;
 
         return $command->run($_SERVER['argv'], $exit);
     }
@@ -246,7 +241,7 @@ class PHPUnit_TextUI_Command
         foreach ($this->options[0] as $option) {
             switch ($option[0]) {
                 case '--colors':
-                    $this->arguments['colors'] = $option[1] ?: PHPUnit_TextUI_ResultPrinter::COLOR_AUTO;
+                    $this->arguments['colors'] = $option[1] ? $option[1] : PHPUnit_TextUI_ResultPrinter::COLOR_AUTO;
                     break;
 
                 case '--bootstrap':
@@ -360,22 +355,6 @@ class PHPUnit_TextUI_Command
                     $this->arguments['loader'] = $option[1];
                     break;
 
-                case '--log-json':
-                    $this->arguments['jsonLogfile'] = $option[1];
-                    break;
-
-                case '--log-junit':
-                    $this->arguments['junitLogfile'] = $option[1];
-                    break;
-
-                case '--log-tap':
-                    $this->arguments['tapLogfile'] = $option[1];
-                    break;
-
-                case '--process-isolation':
-                    $this->arguments['processIsolation'] = true;
-                    break;
-
                 case '--repeat':
                     $this->arguments['repeat'] = (int) $option[1];
                     break;
@@ -402,10 +381,6 @@ class PHPUnit_TextUI_Command
 
                 case '--stop-on-skipped':
                     $this->arguments['stopOnSkipped'] = true;
-                    break;
-
-                case '--tap':
-                    $this->arguments['printer'] = 'PHPUnit_Util_Log_TAP';
                     break;
 
                 case '--testdox':
@@ -740,19 +715,13 @@ class PHPUnit_TextUI_Command
         }
 
         if (class_exists($printerClass)) {
-            $class = new ReflectionClass($printerClass);
-
-            if ($class->implementsInterface('PHPUnit_Framework_TestListener') &&
-                $class->isSubclassOf('PHPUnit_Util_Printer') &&
-                $class->isInstantiable()) {
-                if ($class->isSubclassOf('PHPUnit_TextUI_ResultPrinter')) {
-                    return $printerClass;
-                }
-
-                $outputStream = isset($this->arguments['stderr']) ? 'php://stderr' : null;
-
-                return $class->newInstance($outputStream);
+            if (is_subclass_of($printerClass, 'PHPUnit_TextUI_ResultPrinter')) {
+                return $printerClass;
             }
+
+            $outputStream = isset($this->arguments['stderr']) ? 'php://stderr' : null;
+
+            return new $printerClass($outputStream);
         }
 
         $this->showError(
@@ -910,9 +879,6 @@ Code Coverage Options:
 
 Logging Options:
 
-  --log-junit <file>        Log test execution in JUnit XML format to file.
-  --log-tap <file>          Log test execution in TAP format to file.
-  --log-json <file>         Log test execution in JSON format.
   --testdox-html <file>     Write agile documentation in HTML format to file.
   --testdox-text <file>     Write agile documentation in Text format to file.
 
@@ -935,7 +901,6 @@ Test Execution Options:
   --enforce-time-limit      Enforce time limit based on test size.
   --disallow-todo-tests     Disallow @todo-annotated tests.
 
-  --process-isolation       Run each test in a separate PHP process.
   --no-globals-backup       Do not backup and restore \$GLOBALS for each test.
   --static-backup           Backup and restore static attributes for each test.
 
@@ -953,7 +918,6 @@ Test Execution Options:
 
   --loader <loader>         TestSuiteLoader implementation to use.
   --repeat <times>          Runs the test(s) repeatedly.
-  --tap                     Report test execution progress in TAP format.
   --testdox                 Report test execution progress in TestDox format.
   --printer <printer>       TestListener implementation to use.
 

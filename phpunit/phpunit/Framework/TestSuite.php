@@ -567,9 +567,6 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
                 if ($this->testCase === true &&
                     class_exists($this->name, false) &&
                     method_exists($this->name, $beforeClassMethod)) {
-                    if ($missingRequirements = PHPUnit_Util_Test::getMissingRequirements($this->name, $beforeClassMethod)) {
-                        $this->markTestSuiteSkipped(implode(PHP_EOL, $missingRequirements));
-                    }
 
                     call_user_func(array($this->name, $beforeClassMethod));
                 }
@@ -618,7 +615,6 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
                 $test->setDisallowChangesToGlobalState($this->disallowChangesToGlobalState);
                 $test->setBackupGlobals($this->backupGlobals);
                 $test->setBackupStaticAttributes($this->backupStaticAttributes);
-                $test->setRunTestInSeparateProcess($this->runTestInSeparateProcess);
             }
 
             $test->run($result);
@@ -635,22 +631,6 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
         $result->endTestSuite($this);
 
         return $result;
-    }
-
-    /**
-     * @param bool $runTestInSeparateProcess
-     *
-     * @throws PHPUnit_Framework_Exception
-     *
-     * @since  Method available since Release 3.7.0
-     */
-    public function setRunTestInSeparateProcess($runTestInSeparateProcess)
-    {
-        if (is_bool($runTestInSeparateProcess)) {
-            $this->runTestInSeparateProcess = $runTestInSeparateProcess;
-        } else {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'boolean');
-        }
     }
 
     /**
