@@ -24,7 +24,7 @@ if (defined('__BPC__')) {
                 $mockClassName = 'Mock_' . $type;
             }
 
-            include __DIR__ . '/MockClassFile/' . $mockClassName . '.php';
+            include_once RUN_ROOT_DIR . '/MockClassFile/' . $mockClassName . '.php';
 
             return $this->getObject(
                 $mockClassName,
@@ -292,9 +292,22 @@ if (defined('__BPC__')) {
                 $callOriginalMethods
             );
 
+            $mockDir = getcwd() . '/MockClassFile';
+            if (!is_dir($mockDir)) {
+                $originalMask = umask(0);
+                if (!@mkdir($mockDir, 0777, true)) {
+                    umask($originalMask);
+                    throw new PHPUnit_Framework_MockObject_RuntimeException(
+                        'Can not create mock dir: ' . $mockDir
+                    );
+                }
+                umask($originalMask);
+            }
+
             if (!class_exists($mock['mockClassName'], false)) {
-                file_put_contents(__DIR__ . '/MockClassFile/' . $mockClassName . '.php', "<?php\n\n" . $mock['code']);
-                include __DIR__ . '/MockClassFile/' . $mockClassName . '.php';
+                $mockClassPath = $mockDir . '/' . $mockClassName . '.php';
+                file_put_contents($mockClassPath, "<?php\n\n" . $mock['code']);
+                include $mockClassPath;
             }
 
             return $this->getObject(
@@ -330,6 +343,23 @@ if (defined('__BPC__')) {
                 } else {
                     $class  = new ReflectionClass($className);
                     $object = $class->newInstanceArgs($arguments);
+                }
+            } else {
+                try {
+                    $instantiator = new Doctrine_Instantiator_Instantiator;
+                    $object       = $instantiator->instantiate($className);
+                } catch (Doctrine_Instantiator_Exception_UnexpectedValueException $exception) {
+                    if ($exception->getPrevious()) {
+                        $exception = $exception->getPrevious();
+                    }
+
+                    throw new PHPUnit_Framework_MockObject_RuntimeException(
+                        $exception->getMessage()
+                    );
+                } catch (InstantiatorInvalidArgumentException $exception) {
+                    throw new PHPUnit_Framework_MockObject_RuntimeException(
+                        $exception->getMessage()
+                    );
                 }
             }
 
