@@ -27,17 +27,22 @@ class PHPUnit_Util_Fileloader
      */
     public static function checkAndLoad($filename)
     {
-        $includePathFilename = stream_resolve_include_path($filename);
+        if (defined('__BPC__')) {
+            include_once $filename;
+            return $filename;
+        } else {
+            $includePathFilename = stream_resolve_include_path($filename);
 
-        if (!$includePathFilename || !is_readable($includePathFilename)) {
-            throw new PHPUnit_Framework_Exception(
-                sprintf('Cannot open file "%s".' . "\n", $filename)
-            );
+            if (!$includePathFilename || !is_readable($includePathFilename)) {
+                throw new PHPUnit_Framework_Exception(
+                    sprintf('Cannot open file "%s".' . "\n", $filename)
+                );
+            }
+
+            self::load($includePathFilename);
+
+            return $includePathFilename;
         }
-
-        self::load($includePathFilename);
-
-        return $includePathFilename;
     }
 
     /**
