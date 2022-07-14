@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @group db
  */
@@ -61,5 +60,21 @@ class PostTest extends PHPUnit_DbUnit_Mysql_TestCase
         $filterDataSet->setExcludeColumnsForTable('post', array('create_date'));
 
         $this->assertDataSetsEqual($expectedDataSet, $filterDataSet);
+    }
+
+    public function testPostNotEmpty()
+    {
+        $this->assertTableNotEmpty('post');
+    }
+
+    public function testPostEmpty()
+    {
+        $dsn      = 'mysql:host=127.0.0.1;port=3307;dbname=our_phpunit_test';
+        $user     = 'root';
+        $password = '123456';
+        $pdo      = new PDO($dsn, $user, $password);
+        $pdo->exec('DELETE FROM post WHERE id IN (1,2)');
+
+        $this->assertTableEmpty('post');
     }
 }

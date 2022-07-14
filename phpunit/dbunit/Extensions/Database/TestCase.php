@@ -210,6 +210,22 @@ abstract class PHPUnit_Extensions_Database_TestCase extends PHPUnit_Framework_Te
         self::assertThat($actual, $constraint, $message);
     }
 
+    public function assertTableEmpty()
+    {
+        $tables = func_get_args();
+        foreach ($tables as $table) {
+            $this->assertTableRowCount($table, 0);
+        }
+    }
+
+    public function assertTableNotEmpty()
+    {
+        $tables = func_get_args();
+        foreach ($tables as $table) {
+            $this->assertTrue($this->getConnection()->getRowCount($table) > 0);
+        }
+    }
+
     /**
      * Asserts that a given table contains a given row
      *
