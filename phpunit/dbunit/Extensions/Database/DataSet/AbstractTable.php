@@ -75,7 +75,7 @@ class PHPUnit_Extensions_Database_DataSet_AbstractTable implements PHPUnit_Exten
         if (isset($this->data[$row][$column])) {
             $value = $this->data[$row][$column];
 
-            return ($value instanceof SimpleXMLElement) ? (string) $value : $value;
+            return $value;
         } else {
             if (!in_array($column, $this->getTableMetaData()->getColumns()) || $this->getRowCount() <= $row) {
                 throw new InvalidArgumentException("The given row ({$row}) and column ({$column}) do not exist in table {$this->getTableMetaData()->getTableName()}");

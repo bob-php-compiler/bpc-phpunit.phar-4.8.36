@@ -20,7 +20,7 @@ final class SebastianBergmann_RecursionContext_Context
     private $arrays;
 
     /**
-     * @var SplObjectStorage
+     * @var \SplObjectStorage
      */
     private $objects;
 
@@ -30,7 +30,7 @@ final class SebastianBergmann_RecursionContext_Context
     public function __construct()
     {
         $this->arrays  = array();
-        $this->objects = new SplObjectStorage;
+        $this->objects = array();
     }
 
     /**
@@ -102,11 +102,12 @@ final class SebastianBergmann_RecursionContext_Context
      */
     private function addObject($object)
     {
-        if (!$this->objects->contains($object)) {
-            $this->objects->attach($object);
+        $objectId = spl_object_hash($object);
+        if (!array_key_exists($objectId, $this->objects)) {
+            $this->objects[$objectId] = $object;
         }
 
-        return spl_object_hash($object);
+        return $objectId;
     }
 
     /**
@@ -141,8 +142,9 @@ final class SebastianBergmann_RecursionContext_Context
      */
     private function containsObject($value)
     {
-        if ($this->objects->contains($value)) {
-            return spl_object_hash($value);
+        $objectId = spl_object_hash($value);
+        if (array_key_exists($objectId, $this->objects)) {
+            return $objectId;
         }
 
         return false;

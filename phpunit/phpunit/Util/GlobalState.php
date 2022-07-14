@@ -40,7 +40,7 @@ class PHPUnit_Util_GlobalState
 
     public static function getIncludedFilesAsString()
     {
-        return static::processIncludedFilesAsString(get_included_files());
+        return self::processIncludedFilesAsString(get_included_files());
     }
 
     public static function processIncludedFilesAsString(array $files)
