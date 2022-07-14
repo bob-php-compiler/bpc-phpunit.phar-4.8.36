@@ -689,10 +689,14 @@ class PHPUnit_TextUI_Command
         print <<<EOT
 Usage: phpunit [options] UnitTest [UnitTest.php]
        phpunit [options] <directory>
+
 Logging Options:
+
   --testdox-html <file>     Write agile documentation in HTML format to file.
   --testdox-text <file>     Write agile documentation in Text format to file.
+
 Test Selection Options:
+
   --filter <pattern>        Filter which tests to run.
   --testsuite <name>        Filter which testsuite to run.
   --group ...               Only runs tests from the specified group(s).
@@ -700,15 +704,19 @@ Test Selection Options:
   --list-groups             List available test groups.
   --test-suffix ...         Only search for test in files with specified
                             suffix(es). Default: Test.php,.phpt
+
 Test Execution Options:
+
   --report-useless-tests    Be strict about tests that do not test anything.
   --strict-coverage         Be strict about unintentionally covered code.
   --strict-global-state     Be strict about changes to global state
   --disallow-test-output    Be strict about output during tests.
   --enforce-time-limit      Enforce time limit based on test size.
   --disallow-todo-tests     Disallow @todo-annotated tests.
+
   --no-globals-backup       Do not backup and restore \$GLOBALS for each test.
   --static-backup           Backup and restore static attributes for each test.
+
   --colors=<flag>           Use colors in output ("never", "auto" or "always").
   --columns <n>             Number of columns to use for progress output.
   --columns max             Use maximum number of columns for progress output.
@@ -720,17 +728,23 @@ Test Execution Options:
   --stop-on-incomplete      Stop execution upon first incomplete test.
   -v|--verbose              Output more verbose information.
   --debug                   Display debugging information during test execution.
+
   --loader <loader>         TestSuiteLoader implementation to use.
   --repeat <times>          Runs the test(s) repeatedly.
   --testdox                 Report test execution progress in TestDox format.
   --printer <printer>       TestListener implementation to use.
+
 Configuration Options:
+
   --bootstrap <file>        A "bootstrap" PHP file that is run before the tests.
   --include-path <path(s)>  Prepend PHP's include_path with given path(s).
   -d key[=value]            Sets a php.ini value.
+
 Miscellaneous Options:
+
   -h|--help                 Prints this usage information.
   --version                 Prints the version and exits.
+
 EOT;
 
         if (defined('__PHPUNIT_PHAR__')) {
