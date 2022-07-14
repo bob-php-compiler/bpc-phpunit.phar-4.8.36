@@ -104,8 +104,8 @@ class PHPUnit_Util_ErrorHandler
             }
         };
 
-        set_error_handler(function ($errno, $errstr) use ($severity) {
-            if ($errno === $severity) {
+        set_error_handler(function ($errno) {
+            if ($errno === E_WARNING) {
                 return;
             }
 
