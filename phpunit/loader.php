@@ -145,7 +145,6 @@ include __DIR__ . '/phpunit/Util/TestDox/ResultPrinter.php';
 include __DIR__ . '/phpunit/Util/TestDox/ResultPrinter/HTML.php';
 include __DIR__ . '/phpunit/Util/TestDox/ResultPrinter/Text.php';
 include __DIR__ . '/phpunit/Util/Type.php';
-include __DIR__ . '/phpunit/Util/Bpc.php';
 include __DIR__ . '/sebastian-comparator/Comparator.php';
 include __DIR__ . '/sebastian-comparator/Factory.php';
 include __DIR__ . '/sebastian-comparator/ArrayComparator.php';

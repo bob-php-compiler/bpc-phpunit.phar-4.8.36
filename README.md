@@ -8,6 +8,11 @@
     - phpunit-selenium
     - sebastian-global-state
     - symfony
+    - phpunit/Util/Log
+    - phpunit/phpunit/ForwardCompatibility
+    - dbunit/Extensions/Database/UI
+    - dbunit/Extensions/Database/DataSet/Specs
+    - dbunit/Extensions/Database/DataSet/Persistors
 
   - namespace 相关调整
     - 去掉了 class 开始部分的 namespace SebastianBergmann/Diff, use SebastianBergmann/Diff
@@ -29,3 +34,12 @@
 
   - Mock调整
     - 先用php跑一遍，获取到Mock的Class，写入到mockClassFile文件夹中，第二次用bpc跑的时候直接include写好的MockClass文件
+
+## 如何跑测试
+  - cd phpunit-test
+  - ./create-db.sh
+  - 先用make-phar.php生成的phar跑第一次测试，./phpunit-bpc.phar tests/ --bootstrap=bootstrap.php --group=xxx --bpc=. (运行后会将测试所需的文件写入到test-files文件，并生成测试入口文件run-test.php, TESTCASE_LIST.php, Makefile和MockClass文件)
+
+  - 再用编译过的跑一下
+    - make
+    - ./test --bootstrap=bootstrap.php --group=xxx
