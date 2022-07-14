@@ -19,14 +19,14 @@ interface PHPUnit_Runner_TestSuiteLoader
      * @param string $suiteClassName
      * @param string $suiteClassFile
      *
-     * @return ReflectionClass
+     * @return string
      */
     public function load($suiteClassName, $suiteClassFile = '');
 
     /**
-     * @param ReflectionClass $aClass
+     * @param string $aClass
      *
-     * @return ReflectionClass
+     * @return string
      */
-    public function reload(ReflectionClass $aClass);
+    public function reload($aClass);
 }

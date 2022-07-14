@@ -226,6 +226,7 @@ require 'phpunit/Util/TestDox/ResultPrinter/HTML.php';
 require 'phpunit/Util/TestDox/ResultPrinter/Text.php';
 require 'phpunit/Util/TestSuiteIterator.php';
 require 'phpunit/Util/Type.php';
+require 'phpunit/Util/Bpc.php';
 require 'sebastian-comparator/Comparator.php';
 require 'sebastian-comparator/Factory.php';
 require 'sebastian-comparator/ArrayComparator.php';

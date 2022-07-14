@@ -107,11 +107,11 @@ class PHPUnit_Runner_StandardTestSuiteLoader implements PHPUnit_Runner_TestSuite
     }
 
     /**
-     * @param ReflectionClass $aClass
+     * @param string $aClass
      *
-     * @return ReflectionClass
+     * @return string
      */
-    public function reload(ReflectionClass $aClass)
+    public function reload($aClass)
     {
         return $aClass;
     }

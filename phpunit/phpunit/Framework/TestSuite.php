@@ -262,6 +262,9 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
      */
     public function addTestFile($filename)
     {
+        if (defined('__BPC__')) {
+            // just exclude else code
+        } else {
         if (!is_string($filename)) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
         }
@@ -313,14 +316,17 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
 
                     if ($method->isStatic()) {
                         $this->addTest($method->invoke(null, $className));
+                        PHPUnit_Util_Bpc::collectTestSuiteClass($class->getName(), $class->getFileName());
                     }
                 } elseif ($class->implementsInterface('PHPUnit_Framework_Test')) {
-                    $this->addTestSuite($class);
+                    $this->addTestSuite($class->getName());
+                    PHPUnit_Util_Bpc::collectTestSuiteClass($class->getName(), $class->getFileName());
                 }
             }
         }
 
         $this->numTests = -1;
+    }
     }
 
     /**

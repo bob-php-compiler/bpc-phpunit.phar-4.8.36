@@ -69,7 +69,7 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
         if ($test instanceof PHPUnit_Framework_Test) {
             $aTestRunner = new self;
 
-            return $aTestRunner->doRun(
+            $result = $aTestRunner->doRun(
                 $test,
                 $arguments
             );
@@ -78,6 +78,21 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
                 'No test case or test suite found.'
             );
         }
+
+        if (defined('__BPC__')) {
+            // just exclude else code
+        } else {
+            if (isset(self::$arguments['bpc'])) {
+                // test-files
+                PHPUnit_Util_Bpc::saveTestFiles(BPC_RUN_BEFORE_FILES, self::$arguments['bpc']);
+                // Makefile
+                PHPUnit_Util_Bpc::saveMakefile();
+
+                print "\n\nThe test related files have been generated, you can run make to generate a compile test file\n";
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -359,11 +374,15 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
      */
     public function getLoader()
     {
-        if ($this->loader === null) {
-            $this->loader = new PHPUnit_Runner_StandardTestSuiteLoader;
-        }
+        if (defined('__BPC__')) {
+            // bpc not need loader, empty this function
+        } else {
+            if ($this->loader === null) {
+                $this->loader = new PHPUnit_Runner_StandardTestSuiteLoader;
+            }
 
-        return $this->loader;
+            return $this->loader;
+        }
     }
 
     /**

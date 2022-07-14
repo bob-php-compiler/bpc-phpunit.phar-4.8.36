@@ -34,48 +34,49 @@ class PHPUnit_TextUI_Command
      * @var array
      */
     protected $longOptions = array(
-        'colors=='             => null,
-        'bootstrap='           => null,
-        'columns='             => null,
-        'coverage-clover='     => null,
-        'coverage-crap4j='     => null,
-        'coverage-html='       => null,
-        'coverage-php='        => null,
-        'coverage-text=='      => null,
-        'coverage-xml='        => null,
-        'debug'                => null,
-        'exclude-group='       => null,
-        'filter='              => null,
-        'testsuite='           => null,
-        'group='               => null,
-        'help'                 => null,
-        'include-path='        => null,
-        'list-groups'          => null,
-        'loader='              => null,
-        'repeat='              => null,
-        'stderr'               => null,
-        'stop-on-error'        => null,
-        'stop-on-failure'      => null,
-        'stop-on-incomplete'   => null,
-        'stop-on-risky'        => null,
-        'stop-on-skipped'      => null,
-        'report-useless-tests' => null,
-        'strict-coverage'      => null,
-        'disallow-test-output' => null,
-        'enforce-time-limit'   => null,
-        'disallow-todo-tests'  => null,
-        'strict-global-state'  => null,
-        'strict'               => null,
-        'testdox'              => null,
-        'testdox-html='        => null,
-        'testdox-text='        => null,
-        'test-suffix='         => null,
-        'no-coverage'          => null,
-        'no-globals-backup'    => null,
-        'printer='             => null,
-        'static-backup'        => null,
-        'verbose'              => null,
-        'version'              => null
+        'colors=='              => null,
+        'bootstrap='            => null,
+        'columns='              => null,
+        'coverage-clover='      => null,
+        'coverage-crap4j='      => null,
+        'coverage-html='        => null,
+        'coverage-php='         => null,
+        'coverage-text=='       => null,
+        'coverage-xml='         => null,
+        'debug'                 => null,
+        'exclude-group='        => null,
+        'filter='               => null,
+        'testsuite='            => null,
+        'group='                => null,
+        'help'                  => null,
+        'include-path='         => null,
+        'list-groups'           => null,
+        'loader='               => null,
+        'repeat='               => null,
+        'stderr'                => null,
+        'stop-on-error'         => null,
+        'stop-on-failure'       => null,
+        'stop-on-incomplete'    => null,
+        'stop-on-risky'         => null,
+        'stop-on-skipped'       => null,
+        'report-useless-tests'  => null,
+        'strict-coverage'       => null,
+        'disallow-test-output'  => null,
+        'enforce-time-limit'    => null,
+        'disallow-todo-tests'   => null,
+        'strict-global-state'   => null,
+        'strict'                => null,
+        'testdox'               => null,
+        'testdox-html='         => null,
+        'testdox-text='         => null,
+        'test-suffix='          => null,
+        'no-coverage'           => null,
+        'no-globals-backup'     => null,
+        'printer='              => null,
+        'static-backup'         => null,
+        'verbose'               => null,
+        'version'               => null,
+        'bpc='                  => null
     );
 
     /**
@@ -104,6 +105,7 @@ class PHPUnit_TextUI_Command
         $this->handleArguments($argv);
 
         $runner = $this->createRunner();
+        $runner->setArguments($this->arguments);
 
         if (is_object($this->arguments['test']) &&
             $this->arguments['test'] instanceof PHPUnit_Framework_Test) {
@@ -142,6 +144,19 @@ class PHPUnit_TextUI_Command
             $result = $runner->doRun($suite, $this->arguments);
         } catch (PHPUnit_Framework_Exception $e) {
             print $e->getMessage() . "\n";
+        }
+
+        if (defined('__BPC__')) {
+            // just exclude else code
+        } else {
+            if (isset($this->arguments['bpc'])) {
+                // test-files
+                PHPUnit_Util_Bpc::saveTestFiles(BPC_RUN_BEFORE_FILES, $this->arguments['bpc']);
+                // Makefile
+                PHPUnit_Util_Bpc::saveMakefile();
+
+                print "\n\nThe test related files have been generated, you can run make to generate a compile test file\n";
+            }
         }
 
         $ret = PHPUnit_TextUI_TestRunner::FAILURE_EXIT;
@@ -234,6 +249,24 @@ class PHPUnit_TextUI_Command
             );
         } catch (PHPUnit_Framework_Exception $e) {
             $this->showError($e->getMessage());
+        }
+
+        foreach ($this->options[0] as $option) {
+            if ($option[0] == '--bpc') {
+                $bpcPaths = explode(',', $option[1]);
+                foreach ($bpcPaths as $key => $bpcPath) {
+                    $bpcPath = realpath($bpcPath);
+                    if (!$bpcPath) {
+                        $this->showError("option --bpc is error path");
+                    }
+                    $bpcPaths[$key] = $bpcPath;
+                }
+                $this->arguments['bpc'] = $bpcPaths;
+                if (!defined('BPC_RUN_BEFORE_FILES')) {
+                    define('BPC_RUN_BEFORE_FILES', get_included_files());
+                }
+                break;
+            }
         }
 
         foreach ($this->options[0] as $option) {
@@ -469,21 +502,31 @@ class PHPUnit_TextUI_Command
         $this->handleCustomTestSuite();
 
         if (!isset($this->arguments['test'])) {
-            if (isset($this->options[1][0])) {
-                $this->arguments['test'] = $this->options[1][0];
-            }
+            if (defined('TESTCASE_LIST')) {
+                if (isset($this->options[1][0]) && substr($this->options[1][0], -4) == ".php") {
+                    $this->arguments['test'] = $this->options[1][0];
+                } elseif (isset($this->options[1][1]) && substr($this->options[1][1], -4) == ".php") {
+                    $this->arguments['test'] = $this->options[1][1];
+                }
 
-            if (isset($this->options[1][1])) {
-                $this->arguments['testFile'] = realpath($this->options[1][1]);
-            } else {
                 $this->arguments['testFile'] = '';
-            }
+            } else {
+                if (isset($this->options[1][0])) {
+                    $this->arguments['test'] = $this->options[1][0];
+                }
 
-            if (isset($this->arguments['test']) &&
-                is_file($this->arguments['test']) &&
-                substr($this->arguments['test'], -5, 5) != '.phpt') {
-                $this->arguments['testFile'] = realpath($this->arguments['test']);
-                $this->arguments['test']     = substr($this->arguments['test'], 0, strrpos($this->arguments['test'], '.'));
+                if (isset($this->options[1][1])) {
+                    $this->arguments['testFile'] = realpath($this->options[1][1]);
+                } else {
+                    $this->arguments['testFile'] = '';
+                }
+
+                if (isset($this->arguments['test']) &&
+                    is_file($this->arguments['test']) &&
+                    substr($this->arguments['test'], -5, 5) != '.phpt') {
+                    $this->arguments['testFile'] = realpath($this->arguments['test']);
+                    $this->arguments['test']     = substr($this->arguments['test'], 0, strrpos($this->arguments['test'], '.'));
+                }
             }
         }
 
@@ -511,10 +554,16 @@ class PHPUnit_TextUI_Command
             $this->arguments['printer'] = $this->handlePrinter($this->arguments['printer']);
         }
 
-        if (!isset($this->arguments['test']) ||
-            (isset($this->arguments['testDatabaseLogRevision']) && !isset($this->arguments['testDatabaseDSN']))) {
-            $this->showHelp();
-            exit(PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT);
+        if (defined('TESTCASE_LIST')) {
+            if (!isset($this->arguments['test'])) {
+                $this->arguments['test'] = 'BPC_TEST_LOAD_ALL';
+            }
+        } else {
+            if (!isset($this->arguments['test']) ||
+                (isset($this->arguments['testDatabaseLogRevision']) && !isset($this->arguments['testDatabaseDSN']))) {
+                $this->showHelp();
+                exit(PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT);
+            }
         }
     }
 
@@ -522,24 +571,17 @@ class PHPUnit_TextUI_Command
      * Handles the loading of the PHPUnit_Runner_TestSuiteLoader implementation.
      *
      * @param string $loaderClass
-     * @param string $loaderFile
      *
      * @return PHPUnit_Runner_TestSuiteLoader
      */
-    protected function handleLoader($loaderClass, $loaderFile = '')
+    protected function handleLoader($loaderClass)
     {
         if (!class_exists($loaderClass, false)) {
-            if ($loaderFile == '') {
-                $loaderFile = PHPUnit_Util_Filesystem::classNameToFilename(
-                    $loaderClass
-                );
-            }
+            $loaderFile = PHPUnit_Util_Filesystem::classNameToFilename(
+                $loaderClass
+            );
 
-            $loaderFile = stream_resolve_include_path($loaderFile);
-
-            if ($loaderFile) {
-                require $loaderFile;
-            }
+            include_once $loaderFile;
         }
 
         if (class_exists($loaderClass, false)) {
@@ -608,6 +650,9 @@ class PHPUnit_TextUI_Command
     protected function handleBootstrap($filename)
     {
         try {
+            if (defined('__BPC__')) {
+                $filename = RUN_ROOT_DIR . '/' . $filename;
+            }
             PHPUnit_Util_Fileloader::checkAndLoad($filename);
         } catch (PHPUnit_Framework_Exception $e) {
             $this->showError($e->getMessage());
@@ -644,14 +689,10 @@ class PHPUnit_TextUI_Command
         print <<<EOT
 Usage: phpunit [options] UnitTest [UnitTest.php]
        phpunit [options] <directory>
-
 Logging Options:
-
   --testdox-html <file>     Write agile documentation in HTML format to file.
   --testdox-text <file>     Write agile documentation in Text format to file.
-
 Test Selection Options:
-
   --filter <pattern>        Filter which tests to run.
   --testsuite <name>        Filter which testsuite to run.
   --group ...               Only runs tests from the specified group(s).
@@ -659,19 +700,15 @@ Test Selection Options:
   --list-groups             List available test groups.
   --test-suffix ...         Only search for test in files with specified
                             suffix(es). Default: Test.php,.phpt
-
 Test Execution Options:
-
   --report-useless-tests    Be strict about tests that do not test anything.
   --strict-coverage         Be strict about unintentionally covered code.
   --strict-global-state     Be strict about changes to global state
   --disallow-test-output    Be strict about output during tests.
   --enforce-time-limit      Enforce time limit based on test size.
   --disallow-todo-tests     Disallow @todo-annotated tests.
-
   --no-globals-backup       Do not backup and restore \$GLOBALS for each test.
   --static-backup           Backup and restore static attributes for each test.
-
   --colors=<flag>           Use colors in output ("never", "auto" or "always").
   --columns <n>             Number of columns to use for progress output.
   --columns max             Use maximum number of columns for progress output.
@@ -683,23 +720,17 @@ Test Execution Options:
   --stop-on-incomplete      Stop execution upon first incomplete test.
   -v|--verbose              Output more verbose information.
   --debug                   Display debugging information during test execution.
-
   --loader <loader>         TestSuiteLoader implementation to use.
   --repeat <times>          Runs the test(s) repeatedly.
   --testdox                 Report test execution progress in TestDox format.
   --printer <printer>       TestListener implementation to use.
-
 Configuration Options:
-
   --bootstrap <file>        A "bootstrap" PHP file that is run before the tests.
   --include-path <path(s)>  Prepend PHP's include_path with given path(s).
   -d key[=value]            Sets a php.ini value.
-
 Miscellaneous Options:
-
   -h|--help                 Prints this usage information.
   --version                 Prints the version and exits.
-
 EOT;
 
         if (defined('__PHPUNIT_PHAR__')) {
