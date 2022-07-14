@@ -69,11 +69,13 @@ class PostTest extends PHPUnit_DbUnit_Mysql_TestCase
 
     public function testPostEmpty()
     {
-        $dsn      = 'mysql:host=127.0.0.1;port=3307;dbname=our_phpunit_test';
-        $user     = 'root';
-        $password = '123456';
-        $pdo      = new PDO($dsn, $user, $password);
-        $pdo->exec('DELETE FROM post WHERE id IN (1,2)');
+        $deleteAllOp = new PHPUnit_Extensions_Database_Operation_DeleteAll();
+        $deleteAllOp->execute(
+            $this->getConnection(),
+            $this->createArrayDataSet(array(
+                'post' => array()
+            ))
+        );
 
         $this->assertTableEmpty('post');
     }

@@ -15,20 +15,32 @@
  */
 class PHPUnit_Extensions_Database_Operation_DeleteAll implements PHPUnit_Extensions_Database_Operation_IDatabaseOperation
 {
+    protected $useTransaction;
+
+    public function __construct($transaction = true)
+    {
+        $this->useTransaction = $transaction;
+    }
+
     public function execute(PHPUnit_Extensions_Database_DB_IDatabaseConnection $connection, PHPUnit_Extensions_Database_DataSet_IDataSet $dataSet)
     {
-        foreach ($dataSet->getReverseIterator() as $table) {
-            /* @var $table PHPUnit_Extensions_Database_DataSet_ITable */
-
-            $query = "
-                DELETE FROM {$connection->quoteSchemaObject($table->getTableMetaData()->getTableName())}
-            ";
-
-            try {
-                $connection->getConnection()->query($query);
-            } catch (PDOException $e) {
-                throw new PHPUnit_Extensions_Database_Operation_Exception('DELETE_ALL', $query, array(), $table, $e->getMessage());
+        $pdo = $connection->getConnection();
+        if ($this->useTransaction) {
+            $pdo->beginTransaction();
+        }
+        try {
+            foreach ($dataSet->getReverseIterator() as $table) {
+                $sql = 'DELETE FROM ' . $connection->quoteSchemaObject($table->getTableMetaData()->getTableName());
+                $pdo->exec($sql);
             }
+            if ($this->useTransaction) {
+                $pdo->commit();
+            }
+        } catch (PDOException $e) {
+            if ($this->useTransaction) {
+                $pdo->rollBack();
+            }
+            throw new PHPUnit_Extensions_Database_Operation_Exception('DELETE_ALL', $sql, array(), $table, $e->getMessage());
         }
     }
 }
