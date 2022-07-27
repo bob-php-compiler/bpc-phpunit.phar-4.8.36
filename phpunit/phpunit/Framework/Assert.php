@@ -157,32 +157,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts that a haystack that is stored in a static attribute of a class
-     * or an attribute of an object contains a needle.
-     *
-     * @param mixed  $needle
-     * @param string $haystackAttributeName
-     * @param mixed  $haystackClassOrObject
-     * @param string $message
-     * @param bool   $ignoreCase
-     * @param bool   $checkForObjectIdentity
-     * @param bool   $checkForNonObjectIdentity
-     *
-     * @since  Method available since Release 3.0.0
-     */
-    public static function assertAttributeContains($needle, $haystackAttributeName, $haystackClassOrObject, $message = '', $ignoreCase = false, $checkForObjectIdentity = true, $checkForNonObjectIdentity = false)
-    {
-        self::assertContains(
-            $needle,
-            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-            $message,
-            $ignoreCase,
-            $checkForObjectIdentity,
-            $checkForNonObjectIdentity
-        );
-    }
-
-    /**
      * Asserts that a haystack does not contain a needle.
      *
      * @param mixed  $needle
@@ -227,32 +201,6 @@ abstract class PHPUnit_Framework_Assert
         }
 
         self::assertThat($haystack, $constraint, $message);
-    }
-
-    /**
-     * Asserts that a haystack that is stored in a static attribute of a class
-     * or an attribute of an object does not contain a needle.
-     *
-     * @param mixed  $needle
-     * @param string $haystackAttributeName
-     * @param mixed  $haystackClassOrObject
-     * @param string $message
-     * @param bool   $ignoreCase
-     * @param bool   $checkForObjectIdentity
-     * @param bool   $checkForNonObjectIdentity
-     *
-     * @since  Method available since Release 3.0.0
-     */
-    public static function assertAttributeNotContains($needle, $haystackAttributeName, $haystackClassOrObject, $message = '', $ignoreCase = false, $checkForObjectIdentity = true, $checkForNonObjectIdentity = false)
-    {
-        self::assertNotContains(
-            $needle,
-            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-            $message,
-            $ignoreCase,
-            $checkForObjectIdentity,
-            $checkForNonObjectIdentity
-        );
     }
 
     /**
@@ -317,28 +265,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts that a haystack that is stored in a static attribute of a class
-     * or an attribute of an object contains only values of a given type.
-     *
-     * @param string $type
-     * @param string $haystackAttributeName
-     * @param mixed  $haystackClassOrObject
-     * @param bool   $isNativeType
-     * @param string $message
-     *
-     * @since  Method available since Release 3.1.4
-     */
-    public static function assertAttributeContainsOnly($type, $haystackAttributeName, $haystackClassOrObject, $isNativeType = null, $message = '')
-    {
-        self::assertContainsOnly(
-            $type,
-            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-            $isNativeType,
-            $message
-        );
-    }
-
-    /**
      * Asserts that a haystack does not contain only values of a given type.
      *
      * @param string $type
@@ -375,29 +301,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts that a haystack that is stored in a static attribute of a class
-     * or an attribute of an object does not contain only values of a given
-     * type.
-     *
-     * @param string $type
-     * @param string $haystackAttributeName
-     * @param mixed  $haystackClassOrObject
-     * @param bool   $isNativeType
-     * @param string $message
-     *
-     * @since  Method available since Release 3.1.4
-     */
-    public static function assertAttributeNotContainsOnly($type, $haystackAttributeName, $haystackClassOrObject, $isNativeType = null, $message = '')
-    {
-        self::assertNotContainsOnly(
-            $type,
-            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-            $isNativeType,
-            $message
-        );
-    }
-
-    /**
      * Asserts the number of elements of an array, Countable or Traversable.
      *
      * @param int    $expectedCount
@@ -419,26 +322,6 @@ abstract class PHPUnit_Framework_Assert
         self::assertThat(
             $haystack,
             new PHPUnit_Framework_Constraint_Count($expectedCount),
-            $message
-        );
-    }
-
-    /**
-     * Asserts the number of elements of an array, Countable or Traversable
-     * that is stored in an attribute.
-     *
-     * @param int    $expectedCount
-     * @param string $haystackAttributeName
-     * @param mixed  $haystackClassOrObject
-     * @param string $message
-     *
-     * @since Method available since Release 3.6.0
-     */
-    public static function assertAttributeCount($expectedCount, $haystackAttributeName, $haystackClassOrObject, $message = '')
-    {
-        self::assertCount(
-            $expectedCount,
-            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
             $message
         );
     }
@@ -470,26 +353,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts the number of elements of an array, Countable or Traversable
-     * that is stored in an attribute.
-     *
-     * @param int    $expectedCount
-     * @param string $haystackAttributeName
-     * @param mixed  $haystackClassOrObject
-     * @param string $message
-     *
-     * @since Method available since Release 3.6.0
-     */
-    public static function assertAttributeNotCount($expectedCount, $haystackAttributeName, $haystackClassOrObject, $message = '')
-    {
-        self::assertNotCount(
-            $expectedCount,
-            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-            $message
-        );
-    }
-
-    /**
      * Asserts that two variables are equal.
      *
      * @param mixed  $expected
@@ -511,31 +374,6 @@ abstract class PHPUnit_Framework_Assert
         );
 
         self::assertThat($actual, $constraint, $message);
-    }
-
-    /**
-     * Asserts that a variable is equal to an attribute of an object.
-     *
-     * @param mixed  $expected
-     * @param string $actualAttributeName
-     * @param string $actualClassOrObject
-     * @param string $message
-     * @param float  $delta
-     * @param int    $maxDepth
-     * @param bool   $canonicalize
-     * @param bool   $ignoreCase
-     */
-    public static function assertAttributeEquals($expected, $actualAttributeName, $actualClassOrObject, $message = '', $delta = 0.0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
-    {
-        self::assertEquals(
-            $expected,
-            self::readAttribute($actualClassOrObject, $actualAttributeName),
-            $message,
-            $delta,
-            $maxDepth,
-            $canonicalize,
-            $ignoreCase
-        );
     }
 
     /**
@@ -567,31 +405,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts that a variable is not equal to an attribute of an object.
-     *
-     * @param mixed  $expected
-     * @param string $actualAttributeName
-     * @param string $actualClassOrObject
-     * @param string $message
-     * @param float  $delta
-     * @param int    $maxDepth
-     * @param bool   $canonicalize
-     * @param bool   $ignoreCase
-     */
-    public static function assertAttributeNotEquals($expected, $actualAttributeName, $actualClassOrObject, $message = '', $delta = 0.0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
-    {
-        self::assertNotEquals(
-            $expected,
-            self::readAttribute($actualClassOrObject, $actualAttributeName),
-            $message,
-            $delta,
-            $maxDepth,
-            $canonicalize,
-            $ignoreCase
-        );
-    }
-
-    /**
      * Asserts that a variable is empty.
      *
      * @param mixed  $actual
@@ -602,24 +415,6 @@ abstract class PHPUnit_Framework_Assert
     public static function assertEmpty($actual, $message = '')
     {
         self::assertThat($actual, self::isEmpty(), $message);
-    }
-
-    /**
-     * Asserts that a static attribute of a class or an attribute of an object
-     * is empty.
-     *
-     * @param string $haystackAttributeName
-     * @param mixed  $haystackClassOrObject
-     * @param string $message
-     *
-     * @since Method available since Release 3.5.0
-     */
-    public static function assertAttributeEmpty($haystackAttributeName, $haystackClassOrObject, $message = '')
-    {
-        self::assertEmpty(
-            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-            $message
-        );
     }
 
     /**
@@ -636,24 +431,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts that a static attribute of a class or an attribute of an object
-     * is not empty.
-     *
-     * @param string $haystackAttributeName
-     * @param mixed  $haystackClassOrObject
-     * @param string $message
-     *
-     * @since Method available since Release 3.5.0
-     */
-    public static function assertAttributeNotEmpty($haystackAttributeName, $haystackClassOrObject, $message = '')
-    {
-        self::assertNotEmpty(
-            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-            $message
-        );
-    }
-
-    /**
      * Asserts that a value is greater than another value.
      *
      * @param mixed  $expected
@@ -665,25 +442,6 @@ abstract class PHPUnit_Framework_Assert
     public static function assertGreaterThan($expected, $actual, $message = '')
     {
         self::assertThat($actual, self::greaterThan($expected), $message);
-    }
-
-    /**
-     * Asserts that an attribute is greater than another value.
-     *
-     * @param mixed  $expected
-     * @param string $actualAttributeName
-     * @param string $actualClassOrObject
-     * @param string $message
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function assertAttributeGreaterThan($expected, $actualAttributeName, $actualClassOrObject, $message = '')
-    {
-        self::assertGreaterThan(
-            $expected,
-            self::readAttribute($actualClassOrObject, $actualAttributeName),
-            $message
-        );
     }
 
     /**
@@ -705,25 +463,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts that an attribute is greater than or equal to another value.
-     *
-     * @param mixed  $expected
-     * @param string $actualAttributeName
-     * @param string $actualClassOrObject
-     * @param string $message
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function assertAttributeGreaterThanOrEqual($expected, $actualAttributeName, $actualClassOrObject, $message = '')
-    {
-        self::assertGreaterThanOrEqual(
-            $expected,
-            self::readAttribute($actualClassOrObject, $actualAttributeName),
-            $message
-        );
-    }
-
-    /**
      * Asserts that a value is smaller than another value.
      *
      * @param mixed  $expected
@@ -738,25 +477,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts that an attribute is smaller than another value.
-     *
-     * @param mixed  $expected
-     * @param string $actualAttributeName
-     * @param string $actualClassOrObject
-     * @param string $message
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function assertAttributeLessThan($expected, $actualAttributeName, $actualClassOrObject, $message = '')
-    {
-        self::assertLessThan(
-            $expected,
-            self::readAttribute($actualClassOrObject, $actualAttributeName),
-            $message
-        );
-    }
-
-    /**
      * Asserts that a value is smaller than or equal to another value.
      *
      * @param mixed  $expected
@@ -768,25 +488,6 @@ abstract class PHPUnit_Framework_Assert
     public static function assertLessThanOrEqual($expected, $actual, $message = '')
     {
         self::assertThat($actual, self::lessThanOrEqual($expected), $message);
-    }
-
-    /**
-     * Asserts that an attribute is smaller than or equal to another value.
-     *
-     * @param mixed  $expected
-     * @param string $actualAttributeName
-     * @param string $actualClassOrObject
-     * @param string $message
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function assertAttributeLessThanOrEqual($expected, $actualAttributeName, $actualClassOrObject, $message = '')
-    {
-        self::assertLessThanOrEqual(
-            $expected,
-            self::readAttribute($actualClassOrObject, $actualAttributeName),
-            $message
-        );
     }
 
     /**
@@ -1014,188 +715,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts that a class has a specified attribute.
-     *
-     * @param string $attributeName
-     * @param string $className
-     * @param string $message
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function assertClassHasAttribute($attributeName, $className, $message = '')
-    {
-        if (!is_string($attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
-        }
-
-        if (!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'valid attribute name');
-        }
-
-        if (!is_string($className) || !class_exists($className)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'class name', $className);
-        }
-
-        $constraint = new PHPUnit_Framework_Constraint_ClassHasAttribute(
-            $attributeName
-        );
-
-        self::assertThat($className, $constraint, $message);
-    }
-
-    /**
-     * Asserts that a class does not have a specified attribute.
-     *
-     * @param string $attributeName
-     * @param string $className
-     * @param string $message
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function assertClassNotHasAttribute($attributeName, $className, $message = '')
-    {
-        if (!is_string($attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
-        }
-
-        if (!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'valid attribute name');
-        }
-
-        if (!is_string($className) || !class_exists($className)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'class name', $className);
-        }
-
-        $constraint = new PHPUnit_Framework_Constraint_Not(
-            new PHPUnit_Framework_Constraint_ClassHasAttribute($attributeName)
-        );
-
-        self::assertThat($className, $constraint, $message);
-    }
-
-    /**
-     * Asserts that a class has a specified static attribute.
-     *
-     * @param string $attributeName
-     * @param string $className
-     * @param string $message
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function assertClassHasStaticAttribute($attributeName, $className, $message = '')
-    {
-        if (!is_string($attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
-        }
-
-        if (!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'valid attribute name');
-        }
-
-        if (!is_string($className) || !class_exists($className)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'class name', $className);
-        }
-
-        $constraint = new PHPUnit_Framework_Constraint_ClassHasStaticAttribute(
-            $attributeName
-        );
-
-        self::assertThat($className, $constraint, $message);
-    }
-
-    /**
-     * Asserts that a class does not have a specified static attribute.
-     *
-     * @param string $attributeName
-     * @param string $className
-     * @param string $message
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function assertClassNotHasStaticAttribute($attributeName, $className, $message = '')
-    {
-        if (!is_string($attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
-        }
-
-        if (!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'valid attribute name');
-        }
-
-        if (!is_string($className) || !class_exists($className)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'class name', $className);
-        }
-
-        $constraint = new PHPUnit_Framework_Constraint_Not(
-            new PHPUnit_Framework_Constraint_ClassHasStaticAttribute(
-                $attributeName
-            )
-        );
-
-        self::assertThat($className, $constraint, $message);
-    }
-
-    /**
-     * Asserts that an object has a specified attribute.
-     *
-     * @param string $attributeName
-     * @param object $object
-     * @param string $message
-     *
-     * @since  Method available since Release 3.0.0
-     */
-    public static function assertObjectHasAttribute($attributeName, $object, $message = '')
-    {
-        if (!is_string($attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
-        }
-
-        if (!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'valid attribute name');
-        }
-
-        if (!is_object($object)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'object');
-        }
-
-        $constraint = new PHPUnit_Framework_Constraint_ObjectHasAttribute(
-            $attributeName
-        );
-
-        self::assertThat($object, $constraint, $message);
-    }
-
-    /**
-     * Asserts that an object does not have a specified attribute.
-     *
-     * @param string $attributeName
-     * @param object $object
-     * @param string $message
-     *
-     * @since  Method available since Release 3.0.0
-     */
-    public static function assertObjectNotHasAttribute($attributeName, $object, $message = '')
-    {
-        if (!is_string($attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
-        }
-
-        if (!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'valid attribute name');
-        }
-
-        if (!is_object($object)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'object');
-        }
-
-        $constraint = new PHPUnit_Framework_Constraint_Not(
-            new PHPUnit_Framework_Constraint_ObjectHasAttribute($attributeName)
-        );
-
-        self::assertThat($object, $constraint, $message);
-    }
-
-    /**
      * Asserts that two variables have the same type and value.
      * Used on objects, it asserts that two variables reference
      * the same object.
@@ -1215,24 +734,6 @@ abstract class PHPUnit_Framework_Assert
 
             self::assertThat($actual, $constraint, $message);
         }
-    }
-
-    /**
-     * Asserts that a variable and an attribute of an object have the same type
-     * and value.
-     *
-     * @param mixed  $expected
-     * @param string $actualAttributeName
-     * @param object $actualClassOrObject
-     * @param string $message
-     */
-    public static function assertAttributeSame($expected, $actualAttributeName, $actualClassOrObject, $message = '')
-    {
-        self::assertSame(
-            $expected,
-            self::readAttribute($actualClassOrObject, $actualAttributeName),
-            $message
-        );
     }
 
     /**
@@ -1258,24 +759,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts that a variable and an attribute of an object do not have the
-     * same type and value.
-     *
-     * @param mixed  $expected
-     * @param string $actualAttributeName
-     * @param object $actualClassOrObject
-     * @param string $message
-     */
-    public static function assertAttributeNotSame($expected, $actualAttributeName, $actualClassOrObject, $message = '')
-    {
-        self::assertNotSame(
-            $expected,
-            self::readAttribute($actualClassOrObject, $actualAttributeName),
-            $message
-        );
-    }
-
-    /**
      * Asserts that a variable is of a given type.
      *
      * @param string $expected
@@ -1295,25 +778,6 @@ abstract class PHPUnit_Framework_Assert
         );
 
         self::assertThat($actual, $constraint, $message);
-    }
-
-    /**
-     * Asserts that an attribute is of a given type.
-     *
-     * @param string $expected
-     * @param string $attributeName
-     * @param mixed  $classOrObject
-     * @param string $message
-     *
-     * @since Method available since Release 3.5.0
-     */
-    public static function assertAttributeInstanceOf($expected, $attributeName, $classOrObject, $message = '')
-    {
-        self::assertInstanceOf(
-            $expected,
-            self::readAttribute($classOrObject, $attributeName),
-            $message
-        );
     }
 
     /**
@@ -1339,25 +803,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts that an attribute is of a given type.
-     *
-     * @param string $expected
-     * @param string $attributeName
-     * @param mixed  $classOrObject
-     * @param string $message
-     *
-     * @since Method available since Release 3.5.0
-     */
-    public static function assertAttributeNotInstanceOf($expected, $attributeName, $classOrObject, $message = '')
-    {
-        self::assertNotInstanceOf(
-            $expected,
-            self::readAttribute($classOrObject, $attributeName),
-            $message
-        );
-    }
-
-    /**
      * Asserts that a variable is of a given type.
      *
      * @param string $expected
@@ -1380,25 +825,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Asserts that an attribute is of a given type.
-     *
-     * @param string $expected
-     * @param string $attributeName
-     * @param mixed  $classOrObject
-     * @param string $message
-     *
-     * @since Method available since Release 3.5.0
-     */
-    public static function assertAttributeInternalType($expected, $attributeName, $classOrObject, $message = '')
-    {
-        self::assertInternalType(
-            $expected,
-            self::readAttribute($classOrObject, $attributeName),
-            $message
-        );
-    }
-
-    /**
      * Asserts that a variable is not of a given type.
      *
      * @param string $expected
@@ -1418,25 +844,6 @@ abstract class PHPUnit_Framework_Assert
         );
 
         self::assertThat($actual, $constraint, $message);
-    }
-
-    /**
-     * Asserts that an attribute is of a given type.
-     *
-     * @param string $expected
-     * @param string $attributeName
-     * @param mixed  $classOrObject
-     * @param string $message
-     *
-     * @since Method available since Release 3.5.0
-     */
-    public static function assertAttributeNotInternalType($expected, $attributeName, $classOrObject, $message = '')
-    {
-        self::assertNotInternalType(
-            $expected,
-            self::readAttribute($classOrObject, $attributeName),
-            $message
-        );
     }
 
     /**
@@ -2058,24 +1465,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Returns a PHPUnit_Framework_Constraint_Attribute matcher object.
-     *
-     * @param PHPUnit_Framework_Constraint $constraint
-     * @param string                       $attributeName
-     *
-     * @return PHPUnit_Framework_Constraint_Attribute
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function attribute(PHPUnit_Framework_Constraint $constraint, $attributeName)
-    {
-        return new PHPUnit_Framework_Constraint_Attribute(
-            $constraint,
-            $attributeName
-        );
-    }
-
-    /**
      * Returns a PHPUnit_Framework_Constraint_TraversableContains matcher
      * object.
      *
@@ -2159,36 +1548,6 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
-     * Returns a PHPUnit_Framework_Constraint_IsEqual matcher object
-     * that is wrapped in a PHPUnit_Framework_Constraint_Attribute matcher
-     * object.
-     *
-     * @param string $attributeName
-     * @param mixed  $value
-     * @param float  $delta
-     * @param int    $maxDepth
-     * @param bool   $canonicalize
-     * @param bool   $ignoreCase
-     *
-     * @return PHPUnit_Framework_Constraint_Attribute
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function attributeEqualTo($attributeName, $value, $delta = 0.0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
-    {
-        return self::attribute(
-            self::equalTo(
-                $value,
-                $delta,
-                $maxDepth,
-                $canonicalize,
-                $ignoreCase
-            ),
-            $attributeName
-        );
-    }
-
-    /**
      * Returns a PHPUnit_Framework_Constraint_IsEmpty matcher object.
      *
      * @return PHPUnit_Framework_Constraint_IsEmpty
@@ -2242,55 +1601,6 @@ abstract class PHPUnit_Framework_Assert
         return self::logicalOr(
             new PHPUnit_Framework_Constraint_IsEqual($value),
             new PHPUnit_Framework_Constraint_GreaterThan($value)
-        );
-    }
-
-    /**
-     * Returns a PHPUnit_Framework_Constraint_ClassHasAttribute matcher object.
-     *
-     * @param string $attributeName
-     *
-     * @return PHPUnit_Framework_Constraint_ClassHasAttribute
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function classHasAttribute($attributeName)
-    {
-        return new PHPUnit_Framework_Constraint_ClassHasAttribute(
-            $attributeName
-        );
-    }
-
-    /**
-     * Returns a PHPUnit_Framework_Constraint_ClassHasStaticAttribute matcher
-     * object.
-     *
-     * @param string $attributeName
-     *
-     * @return PHPUnit_Framework_Constraint_ClassHasStaticAttribute
-     *
-     * @since  Method available since Release 3.1.0
-     */
-    public static function classHasStaticAttribute($attributeName)
-    {
-        return new PHPUnit_Framework_Constraint_ClassHasStaticAttribute(
-            $attributeName
-        );
-    }
-
-    /**
-     * Returns a PHPUnit_Framework_Constraint_ObjectHasAttribute matcher object.
-     *
-     * @param string $attributeName
-     *
-     * @return PHPUnit_Framework_Constraint_ObjectHasAttribute
-     *
-     * @since  Method available since Release 3.0.0
-     */
-    public static function objectHasAttribute($attributeName)
-    {
-        return new PHPUnit_Framework_Constraint_ObjectHasAttribute(
-            $attributeName
         );
     }
 
@@ -2461,142 +1771,6 @@ abstract class PHPUnit_Framework_Assert
     public static function fail($message = '')
     {
         throw new PHPUnit_Framework_AssertionFailedError($message);
-    }
-
-    /**
-     * Returns the value of an attribute of a class or an object.
-     * This also works for attributes that are declared protected or private.
-     *
-     * @param mixed  $classOrObject
-     * @param string $attributeName
-     *
-     * @return mixed
-     *
-     * @throws PHPUnit_Framework_Exception
-     */
-    public static function readAttribute($classOrObject, $attributeName)
-    {
-        if (!is_string($attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'string');
-        }
-
-        if (!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'valid attribute name');
-        }
-
-        if (is_string($classOrObject)) {
-            if (!class_exists($classOrObject)) {
-                throw PHPUnit_Util_InvalidArgumentHelper::factory(
-                    1,
-                    'class name'
-                );
-            }
-
-            return self::getStaticAttribute(
-                $classOrObject,
-                $attributeName
-            );
-        } elseif (is_object($classOrObject)) {
-            return self::getObjectAttribute(
-                $classOrObject,
-                $attributeName
-            );
-        } else {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(
-                1,
-                'class name or object'
-            );
-        }
-    }
-
-    /**
-     * Returns the value of a static attribute.
-     * This also works for attributes that are declared protected or private.
-     *
-     * @param string $className
-     * @param string $attributeName
-     *
-     * @return mixed
-     *
-     * @throws PHPUnit_Framework_Exception
-     *
-     * @since  Method available since Release 4.0.0
-     */
-    public static function getStaticAttribute($className, $attributeName)
-    {
-        if (!is_string($className)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
-        }
-
-        if (!class_exists($className)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'class name');
-        }
-
-        if (!is_string($attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'string');
-        }
-
-        if (!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'valid attribute name');
-        }
-
-        // TODO: check static
-        $attributes = get_class_vars($className);
-
-        if (array_key_exists($attributeName, $attributes)) {
-            return $attributes[$attributeName];
-        }
-
-        throw new PHPUnit_Framework_Exception(
-            sprintf(
-                'Attribute "%s" not found in class.',
-                $attributeName
-            )
-        );
-    }
-
-    /**
-     * Returns the value of an object's attribute.
-     * This also works for attributes that are declared protected or private.
-     *
-     * @param object $object
-     * @param string $attributeName
-     *
-     * @return mixed
-     *
-     * @throws PHPUnit_Framework_Exception
-     *
-     * @since  Method available since Release 4.0.0
-     */
-    public static function getObjectAttribute($object, $attributeName)
-    {
-        if (!is_object($object)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'object');
-        }
-
-        if (!is_string($attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'string');
-        }
-
-        if (!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $attributeName)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'valid attribute name');
-        }
-
-        $attributes = get_object_vars($object);
-
-        if (isset($attribute)) {
-            if (!$attribute || $attribute->isPublic()) {
-                return $object->$attributeName;
-            }
-            // TODO: 原来可以将protected或private属性设置为public后,获取value, 修改之后不可以了
-        }
-
-        throw new PHPUnit_Framework_Exception(
-            sprintf(
-                'Attribute "%s" not found in object.',
-                $attributeName
-            )
-        );
     }
 
     /**
