@@ -27,10 +27,10 @@
     - 调整后: bpc环境下会查看是否存在 'beforeMethod' + methodName, 'beforeClassMethod' + methodName, 'afterMethod' + methodName, 'afterClassMethod' + methodName + methodName的方法(methodName首字符要大写)
   - group规则调整
     - 调整前: 查看class以及method方法注释中@group groupName 标注
-    - 调整后: bpc环境下class如果有分组,需定义在类中的 static $classGroups 数组; method如果有分组则查看是否存在'groups' + methodName的方法(methodName首字符要大写), 如存在,需返回所在分组的数组return array('groupName1', 'groupName2');
+    - 调整后: bpc环境下class如果有分组,需定义在类中的 static $classGroups 数组; method如果有分组则查看是否存在static 'groups' + methodName的变量(methodName首字符要大写), 如存在,需返回所在分组的数组return array('groupName1', 'groupName2');
   - depend规则调整
     - 调整前: 查看class以及method方法注释中@depends methodName 标注
-    - 调整后: bpc环境下class如果有依赖,需定义在类中的 static $classDepends 数组; method如果有依赖则查看是否存在'depends' + methodName的方法(methodName首字符要大写), 如存在,需返回所依赖的数组return array('methodName1', 'methodName2');
+    - 调整后: bpc环境下class如果有依赖,需定义在类中的 static $classDepends 数组; method如果有依赖则查看是否存在static 'depends' + methodName的变量(methodName首字符要大写), 如存在,需返回所依赖的数组return array('methodName1', 'methodName2');
 
   - Mock调整
     - 先用php跑一遍，获取到Mock的Class，写入到mockClassFile文件夹中，第二次用bpc跑的时候直接include写好的MockClass文件

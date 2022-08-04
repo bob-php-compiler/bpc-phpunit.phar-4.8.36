@@ -192,13 +192,12 @@ class PHPUnit_Util_Test
             $dependencies = $className::$classDepends;
         }
 
-        // method depends为类中的 static的名为 'depends' + $methodName的方法, 返回一个数组, 数组中元素为依赖的方法名;
+        // method depends为类中的 static的名为 'depends' + $methodName的变量, 为一个数组, 包含依赖的方法名;
         $dependsMethodName = 'depends' . ucwords($methodName);
-        $methods = get_class_methods($className);
-        if (in_array($dependsMethodName, $methods)) {
+        if (property_exists($className, $dependsMethodName)) {
             $dependencies = array_merge(
                 $dependencies,
-                $className::$dependsMethodName()
+                $className::$$dependsMethodName
             );
         }
 
@@ -246,13 +245,12 @@ class PHPUnit_Util_Test
             $groups = $className::$classGroups;
         }
 
-        // method groups为类中的 static的名为 'group' + $methodName的方法, 返回一个数组, 数组中元素为测试的组名;
+        // method groups为类中的 static的名为 'group' + $methodName的变量, 为一个数组, 包含依赖的方法名;
         $groupMethodName = 'groups' . ucwords($methodName);
-        $methods = get_class_methods($className);
-        if (in_array($groupMethodName, $methods)) {
+        if (property_exists($className, $groupMethodName)) {
             $groups = array_merge(
                 $groups,
-                $className::$groupMethodName()
+                $className::$$groupMethodName
             );
         }
 

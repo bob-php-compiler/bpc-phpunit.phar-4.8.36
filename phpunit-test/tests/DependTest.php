@@ -14,6 +14,7 @@ class DependTest extends PHPUnit_Framework_TestCase
         return $stack;
     }
 
+    static $dependsTestPush = array('testEmpty');
     /**
      * @depends testEmpty
      */
@@ -26,11 +27,7 @@ class DependTest extends PHPUnit_Framework_TestCase
         return $stack;
     }
 
-    public static function dependsTestPush()
-    {
-        return array('testEmpty');
-    }
-
+    static $dependsTestPop = array('testPush');
     /**
      * @depends testPush
      */
@@ -38,10 +35,5 @@ class DependTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals('foo', array_pop($stack));
         $this->assertEmpty($stack);
-    }
-
-    public static function dependsTestPop()
-    {
-        return array('testPush');
     }
 }
