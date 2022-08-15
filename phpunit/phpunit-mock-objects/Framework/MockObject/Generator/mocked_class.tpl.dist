@@ -2,7 +2,9 @@
 {
     private $__phpunit_invocationMocker;
     private $__phpunit_originalObject;
+    static $__phpunit_callOriginalConstructor;
 
+{construct}
 {clone}{mocked_methods}
     public function expects(PHPUnit_Framework_MockObject_Matcher_Invocation $matcher)
     {
@@ -32,5 +34,10 @@
     {
         $this->__phpunit_getInvocationMocker()->verify();
         $this->__phpunit_invocationMocker = NULL;
+    }
+
+    public static function __phpunit_setCallOriginalConstructor($__phpunit_callOriginalConstructor)
+    {
+        self::$__phpunit_callOriginalConstructor = $__phpunit_callOriginalConstructor;
     }
 }{epilogue}

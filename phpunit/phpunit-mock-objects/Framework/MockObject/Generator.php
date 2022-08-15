@@ -39,9 +39,10 @@ if (defined('__BPC__')) {
 
         protected function getObject($className, $type = '', $callOriginalConstructor = false, $callAutoload = false, array $arguments = array(), $callOriginalMethods = false, $proxyTarget = null)
         {
-            if ($callOriginalConstructor &&
-                is_string($type) &&
+            if (is_string($type) &&
                 !interface_exists($type, $callAutoload)) {
+
+                $className::__phpunit_setCallOriginalConstructor($callOriginalConstructor);
 
                 $paramCount = count($arguments);
                 if ($paramCount == 0) {
@@ -338,6 +339,9 @@ if (defined('__BPC__')) {
             if ($callOriginalConstructor &&
                 is_string($type) &&
                 !interface_exists($type, $callAutoload)) {
+
+                $className::__phpunit_setCallOriginalConstructor($callOriginalConstructor);
+
                 if (count($arguments) == 0) {
                     $object = new $className;
                 } else {
@@ -666,6 +670,10 @@ if (defined('__BPC__')) {
                 $method = $methodTemplate->render();
             }
 
+            $constructTemplate = new Text_Template($templateDir . 'mocked_construct.tpl');
+            $constructTemplate->setVar(array('parentName' => "'$type'"));
+            $construct         = $constructTemplate->render();
+
             $classTemplate->setVar(
                 array(
                 'prologue'          => isset($prologue) ? $prologue : '',
@@ -678,7 +686,8 @@ if (defined('__BPC__')) {
                 'clone'             => $cloneTemplate,
                 'mock_class_name'   => $mockClassName['className'],
                 'mocked_methods'    => $mockedMethods,
-                'method'            => $method
+                'method'            => $method,
+                'construct'         => $construct
                 )
             );
 

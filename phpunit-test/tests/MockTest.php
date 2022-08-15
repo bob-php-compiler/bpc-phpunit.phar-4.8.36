@@ -6,6 +6,19 @@ class Util
         return md5($p1);
     }
 }
+
+abstract class Zend_Db_Adapter_Abstract
+{
+    protected $_config;
+
+    public function __construct($config)
+    {
+        $this->_config = $config;
+    }
+
+    abstract public function listTables();
+}
+
 /**
  * @group mock
  */
@@ -23,6 +36,13 @@ class MockTest extends PHPUnit_Framework_TestCase
                  ->will($this->returnValue('abcdefghijklmnopqrstuvwxyz123456'));
 
         $this->assertEquals($mockUtil->generatePass('p1'), 'abcdefghijklmnopqrstuvwxyz123456');
+    }
+
+    // Zend_Paginator_Adapter_DbSelectTest
+    public function testCacheIdentifierIsHashOfAssembledSelect()
+    {
+        $dbAdapter = $this->getMockForAbstractClass('Zend_Db_Adapter_Abstract', array(''), '', false);
+        $this->assertTrue($dbAdapter instanceof Zend_Db_Adapter_Abstract);
     }
 }
 ?>
