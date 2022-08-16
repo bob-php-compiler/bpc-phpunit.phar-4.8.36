@@ -19,6 +19,11 @@ abstract class Zend_Db_Adapter_Abstract
     abstract public function listTables();
 }
 
+interface Zend_Session_SaveHandler_Interface
+{
+    public function open($save_path, $name);
+}
+
 /**
  * @group mock
  */
@@ -43,6 +48,13 @@ class MockTest extends PHPUnit_Framework_TestCase
     {
         $dbAdapter = $this->getMockForAbstractClass('Zend_Db_Adapter_Abstract', array(''), '', false);
         $this->assertTrue($dbAdapter instanceof Zend_Db_Adapter_Abstract);
+    }
+
+    // Zend_Application_Resource_SessionTest
+    public function testSetSaveHandler()
+    {
+        $saveHandler = $this->getMock('Zend_Session_SaveHandler_Interface');
+        $this->assertTrue($saveHandler instanceof Zend_Session_SaveHandler_Interface);
     }
 }
 ?>

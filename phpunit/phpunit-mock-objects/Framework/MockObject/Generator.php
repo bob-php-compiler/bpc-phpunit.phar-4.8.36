@@ -39,10 +39,10 @@ if (defined('__BPC__')) {
 
         protected function getObject($className, $type = '', $callOriginalConstructor = false, $callAutoload = false, array $arguments = array(), $callOriginalMethods = false, $proxyTarget = null)
         {
-            if (is_string($type) &&
-                !interface_exists($type, $callAutoload)) {
-
-                $className::__phpunit_setCallOriginalConstructor($callOriginalConstructor);
+            if (is_string($type)) {
+                if (!interface_exists($type, $callAutoload)) {
+                    $className::__phpunit_setCallOriginalConstructor($callOriginalConstructor);
+                }
 
                 $paramCount = count($arguments);
                 if ($paramCount == 0) {
