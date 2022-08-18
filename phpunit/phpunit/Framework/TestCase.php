@@ -123,21 +123,21 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
      *
      * @var string
      */
-    private $expectedExceptionMessage = '';
+    private $expectedExceptionMessage = null;
 
     /**
      * The regex pattern to validate the expected Exception message.
      *
      * @var string
      */
-    private $expectedExceptionMessageRegExp = '';
+    private $expectedExceptionMessageRegExp = null;
 
     /**
      * The code of the expected Exception.
      *
      * @var int
      */
-    private $expectedExceptionCode;
+    private $expectedExceptionCode = null;
 
     /**
      * The name of the test case.
@@ -462,7 +462,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
     public function expectExceptionCode($code)
     {
-        $this->expectedExceptionCode = $exceptionCode;
+        $this->expectedExceptionCode = (int)$code;
     }
 
     public function expectExceptionMessageRegExp($regularExpression)
@@ -748,7 +748,12 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
         if (isset($e)) {
             $checkException = false;
 
-            if (!($e instanceof PHPUnit_Framework_SkippedTestError) && is_string($this->expectedException)) {
+            if (!($e instanceof PHPUnit_Framework_SkippedTestError) && (
+                  is_string($this->expectedException)
+               || is_string($this->expectedExceptionMessage)
+               || is_string($this->expectedExceptionMessageRegExp)
+               || is_int($this->expectedExceptionCode)
+           )) {
                 $checkException = true;
 
                 if ($e instanceof PHPUnit_Framework_Exception) {
@@ -763,12 +768,14 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             }
 
             if ($checkException) {
-                $this->assertThat(
-                    $e,
-                    new PHPUnit_Framework_Constraint_Exception(
-                        $this->expectedException
-                    )
-                );
+                if (is_string($this->expectedException)) {
+                    $this->assertThat(
+                        $e,
+                        new PHPUnit_Framework_Constraint_Exception(
+                            $this->expectedException
+                        )
+                    );
+                }
 
                 if (is_string($this->expectedExceptionMessage) &&
                     !empty($this->expectedExceptionMessage)) {
