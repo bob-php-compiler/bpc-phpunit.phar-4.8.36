@@ -189,16 +189,18 @@ class PHPUnit_Util_Test
         $dependencies = array();
         // class depends为类中的 static $classDepends = array('methodName');
         if (property_exists($className, 'classDepends')) {
-            $dependencies = $className::$classDepends;
+            $dependencies = is_string($className::$classDepends) ? explode(',', $className::$classDepends) : $className::$classDepends;
         }
 
         // method depends为类中的 static的名为 'depends' + $methodName的变量, 为一个数组, 包含依赖的方法名;
         $dependsMethodName = 'depends' . ucwords($methodName);
         if (property_exists($className, $dependsMethodName)) {
-            $dependencies = array_merge(
-                $dependencies,
-                $className::$$dependsMethodName
-            );
+            $methodDepends = is_string($className::$$dependsMethodName) ? explode(',', $className::$$dependsMethodName) : $className::$$dependsMethodName;
+            $dependencies  = array_merge($dependencies, $methodDepends);
+        }
+
+        foreach ($dependencies as $key => $depend) {
+            $dependencies[$key] = trim($depend);
         }
 
         return array_unique($dependencies);
@@ -242,16 +244,18 @@ class PHPUnit_Util_Test
         $groups = array();
         // class groups为类中的 static $classGroups = array('groupName');
         if (property_exists($className, 'classGroups')) {
-            $groups = $className::$classGroups;
+            $groups = is_string($className::$classGroups) ? explode(',', $className::$classGroups) : $className::$classGroups;
         }
 
         // method groups为类中的 static的名为 'group' + $methodName的变量, 为一个数组, 包含依赖的方法名;
         $groupMethodName = 'groups' . ucwords($methodName);
         if (property_exists($className, $groupMethodName)) {
-            $groups = array_merge(
-                $groups,
-                $className::$$groupMethodName
-            );
+            $methodGroup = is_string($className::$$groupMethodName) ? explode(',', $className::$$groupMethodName) : $className::$$groupMethodName;
+            $groups      = array_merge($groups, $methodGroup);
+        }
+
+        foreach ($groups as $key => $group) {
+            $groups[$key] = trim($group);
         }
 
         return array_unique($groups);

@@ -4,7 +4,7 @@
  */
 class GroupTest extends PHPUnit_Framework_TestCase
 {
-    static $classGroups = array('group');
+    static $classGroups = 'group';
     public $foo = '';
 
     public function setUp()
@@ -26,7 +26,7 @@ class GroupTest extends PHPUnit_Framework_TestCase
         return $stack;
     }
 
-    static $groupsTestInterview = array('group002', 'interview');
+    static $groupsTestInterview = 'group002, interview';
     /**
      * @group group002
      * @group interview

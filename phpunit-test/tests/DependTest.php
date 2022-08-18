@@ -27,7 +27,7 @@ class DependTest extends PHPUnit_Framework_TestCase
         return $stack;
     }
 
-    static $dependsTestPop = array('testPush');
+    static $dependsTestPop = 'testPush';
     /**
      * @depends testPush
      */
