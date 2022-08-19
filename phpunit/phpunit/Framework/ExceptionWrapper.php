@@ -78,8 +78,8 @@ class PHPUnit_Framework_ExceptionWrapper extends PHPUnit_Framework_Exception
     {
         $string = PHPUnit_Framework_TestFailure::exceptionToString($this);
 
-        if ($trace = PHPUnit_Util_Filter::getFilteredStacktrace($this)) {
-            $string .= "\n" . $trace;
+        if ($trace = $this->getTraceAsString()) {
+            $string .= $trace . "\n";
         }
 
         if ($this->previous) {

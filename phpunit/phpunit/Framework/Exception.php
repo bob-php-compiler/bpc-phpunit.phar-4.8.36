@@ -63,8 +63,8 @@ class PHPUnit_Framework_Exception extends RuntimeException implements PHPUnit_Ex
     {
         $string = PHPUnit_Framework_TestFailure::exceptionToString($this);
 
-        if ($trace = PHPUnit_Util_Filter::getFilteredStacktrace($this)) {
-            $string .= "\n" . $trace;
+        if ($trace = $this->getTraceAsString()) {
+            $string .= $trace . "\n";
         }
 
         return $string;
