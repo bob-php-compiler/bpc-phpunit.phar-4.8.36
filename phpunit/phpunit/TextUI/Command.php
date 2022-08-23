@@ -105,7 +105,6 @@ class PHPUnit_TextUI_Command
         $this->handleArguments($argv);
 
         $runner = $this->createRunner();
-        $runner->setArguments($this->arguments);
 
         if (is_object($this->arguments['test']) &&
             $this->arguments['test'] instanceof PHPUnit_Framework_Test) {
@@ -140,6 +139,19 @@ class PHPUnit_TextUI_Command
         unset($this->arguments['test']);
         unset($this->arguments['testFile']);
 
+        if (defined('__BPC__')) {
+            // just exclude else code
+        } else {
+            if (isset($this->arguments['bpc'])) {
+                $utilBpc = new PHPUnit_Util_Bpc;
+                if (isset($this->arguments['bpc'])) {
+                    $this->arguments['listeners'] = array($utilBpc);
+                }
+            } else {
+                $utilBpc = null;
+            }
+        }
+
         try {
             $result = $runner->doRun($suite, $this->arguments);
         } catch (PHPUnit_Framework_Exception $e) {
@@ -149,12 +161,8 @@ class PHPUnit_TextUI_Command
         if (defined('__BPC__')) {
             // just exclude else code
         } else {
-            if (isset($this->arguments['bpc'])) {
-                // test-files
-                PHPUnit_Util_Bpc::saveTestFiles(BPC_RUN_BEFORE_FILES, $this->arguments['bpc']);
-                // Makefile
-                PHPUnit_Util_Bpc::saveMakefile();
-
+            if ($utilBpc) {
+                $utilBpc->generateFiles(BPC_RUN_BEFORE_FILES, $this->arguments['bpc']);
                 print "\n\nThe test related files have been generated, you can run make to generate a compile test file\n";
             }
         }

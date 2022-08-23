@@ -69,7 +69,7 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
         if ($test instanceof PHPUnit_Framework_Test) {
             $aTestRunner = new self;
 
-            $result = $aTestRunner->doRun(
+            return $aTestRunner->doRun(
                 $test,
                 $arguments
             );
@@ -78,21 +78,6 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
                 'No test case or test suite found.'
             );
         }
-
-        if (defined('__BPC__')) {
-            // just exclude else code
-        } else {
-            if (isset(self::$arguments['bpc'])) {
-                // test-files
-                PHPUnit_Util_Bpc::saveTestFiles(BPC_RUN_BEFORE_FILES, self::$arguments['bpc']);
-                // Makefile
-                PHPUnit_Util_Bpc::saveMakefile();
-
-                print "\n\nThe test related files have been generated, you can run make to generate a compile test file\n";
-            }
-        }
-
-        return $result;
     }
 
     /**

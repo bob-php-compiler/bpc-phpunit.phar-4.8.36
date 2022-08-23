@@ -23,8 +23,6 @@ abstract class PHPUnit_Runner_BaseTestRunner
     const STATUS_RISKY      = 5;
     const SUITE_METHODNAME  = 'suite';
 
-    protected static $arguments;
-
     /**
      * Returns the loader to be used.
      *
@@ -107,10 +105,6 @@ abstract class PHPUnit_Runner_BaseTestRunner
             $suite = new PHPUnit_Framework_TestSuite($suiteClassName);
             $suite->addTestFiles($files);
 
-            if (isset(self::$arguments['bpc'])) {
-                PHPUnit_Util_Bpc::generateEntryFile();
-            }
-
             return $suite;
         }
 
@@ -159,11 +153,6 @@ abstract class PHPUnit_Runner_BaseTestRunner
 
         $this->clearStatus();
 
-        if (isset(self::$arguments['bpc'])) {
-            PHPUnit_Util_Bpc::collectTestSuiteClass($testClass->getName(), $testClass->getFileName());
-            PHPUnit_Util_Bpc::generateEntryFile();
-        }
-
         return $test;
         }
         }
@@ -198,9 +187,4 @@ abstract class PHPUnit_Runner_BaseTestRunner
      * @param string $message
      */
     abstract protected function runFailed($message);
-
-    public function setArguments($arguments = array())
-    {
-        self::$arguments = $arguments;
-    }
 }

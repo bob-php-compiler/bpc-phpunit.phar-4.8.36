@@ -315,11 +315,9 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
 
                     if ($method->isStatic()) {
                         $this->addTest($method->invoke(null, $className));
-                        PHPUnit_Util_Bpc::collectTestSuiteClass($class->getName(), $class->getFileName());
                     }
                 } elseif ($class->implementsInterface('PHPUnit_Framework_Test')) {
                     $this->addTestSuite($class->getName());
-                    PHPUnit_Util_Bpc::collectTestSuiteClass($class->getName(), $class->getFileName());
                 }
             }
         }
