@@ -76,7 +76,8 @@ class PHPUnit_TextUI_Command
         'static-backup'         => null,
         'verbose'               => null,
         'version'               => null,
-        'bpc='                  => null
+        'bpc='                  => null,
+        'show-phpunit-errtrace' => null
     );
 
     /**
@@ -490,6 +491,10 @@ class PHPUnit_TextUI_Command
 
                 case '--whitelist':
                     $this->arguments['whitelist'] = $option[1];
+                    break;
+
+                case '--show-phpunit-errtrace':
+                    define('SHOW_PHPUNIT_ERRTRACE', true);
                     break;
 
                 default:

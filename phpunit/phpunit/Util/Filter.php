@@ -62,11 +62,15 @@ class PHPUnit_Util_Filter
             );
         }
 
-        $blacklist = new PHPUnit_Util_Blacklist;
+        if (defined('SHOW_PHPUNIT_ERRTRACE')) {
+            $blacklist = false;
+        } else {
+            $blacklist = new PHPUnit_Util_Blacklist;
+        }
 
         foreach ($eTrace as $frame) {
             if (isset($frame['file']) && is_file($frame['file']) &&
-                !$blacklist->isBlacklisted($frame['file']) &&
+                ($blacklist === false || !$blacklist->isBlacklisted($frame['file'])) &&
                 ($prefix === false || strpos($frame['file'], $prefix) !== 0) &&
                 $frame['file'] !== $script) {
                 if ($asString === true) {
