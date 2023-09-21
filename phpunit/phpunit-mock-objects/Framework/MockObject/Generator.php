@@ -21,7 +21,16 @@ if (defined('__BPC__')) {
         public function getMock($type, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = true, $callOriginalMethods = false, $proxyTarget = null)
         {
             if ($mockClassName == '') {
-                $mockClassName = 'Mock_' . $type;
+                $mockClassName = 'Mock_' . strtr($type, '\\', '_');
+                $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+                foreach ($backtrace as $item) {
+                    if (   strncmp($item['function'], 'test', 4) === 0
+                        && substr_compare($item['class'], 'Test', -4, 4) === 0
+                    ) {
+                        $mockClassName .= '_' . strtr($item['class'], '\\', '_') . '_' . $item['function'];
+                        break;
+                    }
+                }
             }
 
             include_once RUN_ROOT_DIR . '/MockClassFile/' . $mockClassName . '.php';
@@ -281,7 +290,16 @@ if (defined('__BPC__')) {
             }
 
             if ($mockClassName == '') {
-                $mockClassName = 'Mock_' . $type;
+                $mockClassName = 'Mock_' . strtr($type, '\\', '_');
+                $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+                foreach ($backtrace as $item) {
+                    if (   strncmp($item['function'], 'test', 4) === 0
+                        && substr_compare($item['class'], 'Test', -4, 4) === 0
+                    ) {
+                        $mockClassName .= '_' . strtr($item['class'], '\\', '_') . '_' . $item['function'];
+                        break;
+                    }
+                }
             }
             $mock = $this->generate(
                 $type,

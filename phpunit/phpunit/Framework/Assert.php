@@ -802,6 +802,186 @@ abstract class PHPUnit_Framework_Assert
         self::assertThat($actual, $constraint, $message);
     }
 
+    public static function assertIsArray($actual, $message = '')
+    {
+        self::assertInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsBool($actual, $message = '')
+    {
+        self::assertInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_BOOL,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsFloat($actual, $message = '')
+    {
+        self::assertInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_FLOAT,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsInt($actual, $message = '')
+    {
+        self::assertInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_INT,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsNumeric($actual, $message = '')
+    {
+        self::assertInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_NUMERIC,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsObject($actual, $message = '')
+    {
+        self::assertInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_OBJECT,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsResource($actual, $message = '')
+    {
+        self::assertInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsString($actual, $message = '')
+    {
+        self::assertInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_STRING,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsScalar($actual, $message = '')
+    {
+        self::assertInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_SCALAR,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsCallable($actual, $message = '')
+    {
+        self::assertInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_CALLABLE,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsNotArray($actual, $message = '')
+    {
+        self::assertNotInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsNotBool($actual, $message = '')
+    {
+        self::assertNotInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_BOOL,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsNotFloat($actual, $message = '')
+    {
+        self::assertNotInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_FLOAT,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsNotInt($actual, $message = '')
+    {
+        self::assertNotInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_INT,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsNotNumeric($actual, $message = '')
+    {
+        self::assertNotInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_NUMERIC,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsNotObject($actual, $message = '')
+    {
+        self::assertNotInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_OBJECT,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsNotResource($actual, $message = '')
+    {
+        self::assertNotInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsNotString($actual, $message = '')
+    {
+        self::assertNotInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_STRING,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsNotScalar($actual, $message = '')
+    {
+        self::assertNotInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_SCALAR,
+            $actual,
+            $message
+        );
+    }
+
+    public static function assertIsNotCallable($actual, $message = '')
+    {
+        self::assertNotInternalType(
+            PHPUnit_Framework_Constraint_IsType::TYPE_CALLABLE,
+            $actual,
+            $message
+        );
+    }
+
     /**
      * Asserts that a variable is of a given type.
      *
@@ -1102,6 +1282,38 @@ abstract class PHPUnit_Framework_Assert
         );
 
         self::assertThat($string, $constraint, $message);
+    }
+
+    public static function assertStringContainsString(string $needle, string $haystack, string $message = '')
+    {
+        $constraint = new PHPUnit_Framework_Constraint_StringContains($needle);
+
+        self::assertThat($haystack, $constraint, $message);
+    }
+
+    public static function assertStringContainsStringIgnoringCase(string $needle, string $haystack, string $message = '')
+    {
+        $constraint = new PHPUnit_Framework_Constraint_StringContains($needle, true);
+
+        self::assertThat($haystack, $constraint, $message);
+    }
+
+    public static function assertStringNotContainsString(string $needle, string $haystack, string $message = '')
+    {
+        $constraint = new PHPUnit_Framework_Constraint_Not(
+            new PHPUnit_Framework_Constraint_StringContains($needle)
+        );
+
+        self::assertThat($haystack, $constraint, $message);
+    }
+
+    public static function assertStringNotContainsStringIgnoringCase(string $needle, string $haystack, string $message = '')
+    {
+        $constraint = new PHPUnit_Framework_Constraint_Not(
+            new PHPUnit_Framework_Constraint_StringContains($needle, true)
+        );
+
+        self::assertThat($haystack, $constraint, $message);
     }
 
     /**

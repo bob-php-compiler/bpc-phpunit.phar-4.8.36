@@ -1107,6 +1107,15 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
         }
     }
 
+    protected function createMock($originalClassName)
+    {
+        return $this->getMockBuilder($originalClassName)
+                    ->disableOriginalConstructor()
+                    ->disableOriginalClone()
+                    ->disableArgumentCloning()
+                    ->getMock();
+    }
+
     /**
      * Returns a mock object for the specified class.
      *

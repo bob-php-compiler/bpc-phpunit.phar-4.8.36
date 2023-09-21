@@ -29,6 +29,7 @@ class PHPUnit_Framework_MockObject_MockBuilder
      * @var array
      */
     private $methods = array();
+    private $emptyMethodsArray = false;
 
     /**
      * @var string
@@ -89,7 +90,7 @@ class PHPUnit_Framework_MockObject_MockBuilder
     {
         return $this->testCase->getMock(
             $this->type,
-            $this->methods,
+            !$this->emptyMethodsArray ? $this->methods : null,
             $this->constructorArgs,
             $this->mockClassName,
             $this->originalConstructor,
@@ -115,7 +116,7 @@ class PHPUnit_Framework_MockObject_MockBuilder
             $this->originalConstructor,
             $this->originalClone,
             $this->autoload,
-            $this->methods,
+            !$this->emptyMethodsArray ? $this->methods : null,
             $this->cloneArguments
         );
     }
@@ -126,9 +127,21 @@ class PHPUnit_Framework_MockObject_MockBuilder
      * @param  array|null                               $methods
      * @return PHPUnit_Framework_MockObject_MockBuilder
      */
-    public function setMethods($methods)
+    public function setMethods(array $methods)
     {
         $this->methods = $methods;
+
+        return $this;
+    }
+
+    public function onlyMethods(array $methods)
+    {
+        if (empty($methods)) {
+            $this->emptyMethodsArray = true;
+            return $this;
+        }
+
+        $this->methods = array_merge($this->methods, $methods);
 
         return $this;
     }
