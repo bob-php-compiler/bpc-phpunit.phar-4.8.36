@@ -53,33 +53,12 @@ if (defined('__BPC__')) {
                     $className::__phpunit_setCallOriginalConstructor($callOriginalConstructor);
                 }
 
-                $paramCount = count($arguments);
-                if ($paramCount == 0) {
-                    $object = new $className;
-                } else {
-                    $padParams = array_pad($arguments, 20, 0);
-                    $object    = new $className(
-                        $padParams[0], $padParams[1], $padParams[2], $padParams[3], $padParams[4],
-                        $padParams[5], $padParams[6], $padParams[7], $padParams[8], $padParams[9],
-                        $padParams[10], $padParams[11], $padParams[12], $padParams[13], $padParams[14],
-                        $padParams[15], $padParams[16], $padParams[17], $padParams[18], $padParams[19]
-                    );
-                }
+                $object = class_new_instance_args($className, $arguments);
             }
 
             if ($callOriginalMethods) {
                 if (!is_object($proxyTarget)) {
-                    if (count($arguments) == 0) {
-                        $proxyTarget = new $type;
-                    } else {
-                        $padParams   = array_pad($arguments, 20, 0);
-                        $proxyTarget = new $type(
-                            $padParams[0], $padParams[1], $padParams[2], $padParams[3], $padParams[4],
-                            $padParams[5], $padParams[6], $padParams[7], $padParams[8], $padParams[9],
-                            $padParams[10], $padParams[11], $padParams[12], $padParams[13], $padParams[14],
-                            $padParams[15], $padParams[16], $padParams[17], $padParams[18], $padParams[19]
-                        );
-                    }
+                    $proxyTarget = class_new_instance_args($type, $arguments);
                 }
 
                 $object->__phpunit_setOriginalObject($proxyTarget);
