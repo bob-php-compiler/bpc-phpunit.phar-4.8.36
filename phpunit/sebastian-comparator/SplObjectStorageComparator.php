@@ -37,7 +37,7 @@ class SebastianBergmann_Comparator_SplObjectStorageComparator extends SebastianB
      *
      * @throws ComparisonFailure
      */
-    public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false)
+    public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false, array &$processed = array())
     {
         foreach ($actual as $object) {
             if (!$expected->contains($object)) {

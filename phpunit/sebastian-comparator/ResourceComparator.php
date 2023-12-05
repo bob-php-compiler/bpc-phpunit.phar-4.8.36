@@ -36,7 +36,7 @@ class SebastianBergmann_Comparator_ResourceComparator extends SebastianBergmann_
      *
      * @throws ComparisonFailure
      */
-    public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false)
+    public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false, array &$processed = array())
     {
         if ($actual != $expected) {
             throw new SebastianBergmann_Comparator_ComparisonFailure(

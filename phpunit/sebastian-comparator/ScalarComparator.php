@@ -41,7 +41,7 @@ class SebastianBergmann_Comparator_ScalarComparator extends SebastianBergmann_Co
      *
      * @throws ComparisonFailure
      */
-    public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false)
+    public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false, array &$processed = array())
     {
         $expectedToCompare = $expected;
         $actualToCompare   = $actual;
