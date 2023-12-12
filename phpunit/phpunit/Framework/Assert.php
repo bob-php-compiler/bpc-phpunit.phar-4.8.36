@@ -715,6 +715,30 @@ abstract class PHPUnit_Framework_Assert
     }
 
     /**
+     * Asserts that a variable is finite.
+     */
+    public static function assertFinite($actual, string $message = '')
+    {
+        self::assertThat($actual, self::isFinite(), $message);
+    }
+
+    /**
+     * Asserts that a variable is infinite.
+     */
+    public static function assertInfinite($actual, string $message = '')
+    {
+        self::assertThat($actual, self::isInfinite(), $message);
+    }
+
+    /**
+     * Asserts that a variable is nan.
+     */
+    public static function assertNan($actual, string $message = '')
+    {
+        self::assertThat($actual, self::isNan(), $message);
+    }
+
+    /**
      * Asserts that two variables have the same type and value.
      * Used on objects, it asserts that two variables reference
      * the same object.
@@ -1674,6 +1698,21 @@ abstract class PHPUnit_Framework_Assert
     public static function isNull()
     {
         return new PHPUnit_Framework_Constraint_IsNull;
+    }
+
+    public static function isFinite()
+    {
+        return new PHPUnit_Framework_Constraint_IsFinite;
+    }
+
+    public static function isInfinite()
+    {
+        return new PHPUnit_Framework_Constraint_IsInfinite;
+    }
+
+    public static function isNan()
+    {
+        return new PHPUnit_Framework_Constraint_IsNan;
     }
 
     /**
