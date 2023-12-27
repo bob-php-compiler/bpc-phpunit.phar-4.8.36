@@ -53,12 +53,20 @@ if (defined('__BPC__')) {
                     $className::__phpunit_setCallOriginalConstructor($callOriginalConstructor);
                 }
 
-                $object = bpc_class_new_instance_args($className, $arguments);
+                if ($arguments) {
+                    $object = new $className(...$arguments);
+                } else {
+                    $object = new $className;
+                }
             }
 
             if ($callOriginalMethods) {
                 if (!is_object($proxyTarget)) {
-                    $proxyTarget = bpc_class_new_instance_args($type, $arguments);
+                    if ($arguments) {
+                        $proxyTarget = new $type(...$arguments);
+                    } else {
+                        $proxyTarget = new $type;
+                    }
                 }
 
                 $object->__phpunit_setOriginalObject($proxyTarget);
