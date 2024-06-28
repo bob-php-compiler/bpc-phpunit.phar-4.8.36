@@ -63,7 +63,7 @@ class PHPUnit_Extensions_TestDecorator extends PHPUnit_Framework_Assert implemen
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->test);
     }

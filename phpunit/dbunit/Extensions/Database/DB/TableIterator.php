@@ -71,6 +71,7 @@ class PHPUnit_Extensions_Database_DB_TableIterator implements PHPUnit_Extensions
      *
      * @return PHPUnit_Extensions_Database_DataSet_ITable
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         $tableName = current($this->tableNames);
@@ -83,6 +84,7 @@ class PHPUnit_Extensions_Database_DB_TableIterator implements PHPUnit_Extensions
      *
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->current()->getTableMetaData()->getTableName();
@@ -91,7 +93,7 @@ class PHPUnit_Extensions_Database_DB_TableIterator implements PHPUnit_Extensions
     /**
      * advances to the next element.
      */
-    public function next()
+    public function next(): void
     {
         if ($this->reverse) {
             prev($this->tableNames);
@@ -103,7 +105,7 @@ class PHPUnit_Extensions_Database_DB_TableIterator implements PHPUnit_Extensions
     /**
      * Rewinds to the first element
      */
-    public function rewind()
+    public function rewind(): void
     {
         if ($this->reverse) {
             end($this->tableNames);
@@ -117,7 +119,7 @@ class PHPUnit_Extensions_Database_DB_TableIterator implements PHPUnit_Extensions
      *
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return (current($this->tableNames) !== FALSE);
     }

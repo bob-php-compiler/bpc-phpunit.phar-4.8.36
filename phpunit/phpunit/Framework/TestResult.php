@@ -628,7 +628,7 @@ class PHPUnit_Framework_TestResult implements Countable
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return $this->runTests;
     }

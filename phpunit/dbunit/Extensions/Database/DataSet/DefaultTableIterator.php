@@ -69,6 +69,7 @@ class PHPUnit_Extensions_Database_DataSet_DefaultTableIterator implements PHPUni
      *
      * @return PHPUnit_Extensions_Database_DataSet_ITable
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->tables);
@@ -79,6 +80,7 @@ class PHPUnit_Extensions_Database_DataSet_DefaultTableIterator implements PHPUni
      *
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->current()->getTableMetaData()->getTableName();
@@ -87,7 +89,7 @@ class PHPUnit_Extensions_Database_DataSet_DefaultTableIterator implements PHPUni
     /**
      * advances to the next element.
      */
-    public function next()
+    public function next(): void
     {
         if ($this->reverse) {
             prev($this->tables);
@@ -99,7 +101,7 @@ class PHPUnit_Extensions_Database_DataSet_DefaultTableIterator implements PHPUni
     /**
      * Rewinds to the first element
      */
-    public function rewind()
+    public function rewind(): void
     {
         if ($this->reverse) {
             end($this->tables);
@@ -113,7 +115,7 @@ class PHPUnit_Extensions_Database_DataSet_DefaultTableIterator implements PHPUni
      *
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return ($this->current() !== FALSE);
     }

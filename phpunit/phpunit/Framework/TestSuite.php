@@ -357,7 +357,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
      *
      * @return int
      */
-    public function count($preferCache = false)
+    public function count($preferCache = false): int
     {
         if ($preferCache && $this->cachedNumTests != null) {
             $numTests = $this->cachedNumTests;
@@ -824,7 +824,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
      *
      * @since  Method available since Release 3.1.0
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         $iterator = new PHPUnit_Util_TestSuiteIterator($this);
 

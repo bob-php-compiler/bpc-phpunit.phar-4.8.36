@@ -55,7 +55,7 @@ class PHPUnit_Extensions_RepeatedTest extends PHPUnit_Extensions_TestDecorator
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return $this->timesRepeat * count($this->test);
     }

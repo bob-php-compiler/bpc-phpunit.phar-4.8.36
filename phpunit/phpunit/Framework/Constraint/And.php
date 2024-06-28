@@ -112,7 +112,7 @@ class PHPUnit_Framework_Constraint_And extends PHPUnit_Framework_Constraint
      *
      * @since  Method available since Release 3.4.0
      */
-    public function count()
+    public function count(): int
     {
         $count = 0;
 

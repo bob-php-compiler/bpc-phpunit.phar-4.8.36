@@ -55,7 +55,7 @@ class PHPUnit_Framework_Constraint_IsAnything extends PHPUnit_Framework_Constrai
      *
      * @since  Method available since Release 3.5.0
      */
-    public function count()
+    public function count(): int
     {
         return 0;
     }

@@ -44,7 +44,7 @@ abstract class PHPUnit_Runner_Filter_GroupFilterIterator extends RecursiveFilter
     /**
      * @return bool
      */
-    public function accept()
+    public function accept(): bool
     {
         $test = $this->getInnerIterator()->current();
 

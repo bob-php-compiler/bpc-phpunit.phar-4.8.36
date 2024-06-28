@@ -274,7 +274,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return 1;
     }

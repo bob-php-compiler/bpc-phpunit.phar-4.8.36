@@ -88,7 +88,7 @@ class PHPUnit_Runner_Filter_Test extends RecursiveFilterIterator
     /**
      * @return bool
      */
-    public function accept()
+    public function accept(): bool
     {
         $test = $this->getInnerIterator()->current();
 

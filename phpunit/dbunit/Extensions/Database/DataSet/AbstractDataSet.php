@@ -73,7 +73,7 @@ abstract class PHPUnit_Extensions_Database_DataSet_AbstractDataSet implements PH
      *
      * @return PHPUnit_Extensions_Database_DataSet_ITableIterator
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return $this->createIterator();
     }
