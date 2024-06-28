@@ -738,7 +738,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
         }
 
         try {
-            $testResult = call_user_func_array(array($this, $methodName), array_merge($this->data, $this->dependencyInput));
+            $testResult = call_user_func_array(array($this, $methodName), array_values(array_merge($this->data, $this->dependencyInput)));
         } catch (Throwable $_e) {
             $e = $_e;
         } catch (Exception $_e) {
