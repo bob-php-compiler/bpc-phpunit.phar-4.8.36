@@ -36,9 +36,6 @@ class PHPUnit_Extensions_Database_Operation_Truncate implements PHPUnit_Extensio
         if ($isMysql) {
             $this->disableForeignKeyChecksForMysql($pdo);
         }
-        if ($this->useTransaction) {
-            $pdo->beginTransaction();
-        }
         try {
             foreach ($dataSet->getReverseIterator() as $table) {
                 $sql = $connection->getTruncateCommand() . ' ' . $connection->quoteSchemaObject($table->getTableMetaData()->getTableName());
@@ -47,13 +44,7 @@ class PHPUnit_Extensions_Database_Operation_Truncate implements PHPUnit_Extensio
                 }
                 $pdo->exec($sql);
             }
-            if ($this->useTransaction) {
-                $pdo->commit();
-            }
         } catch (Exception $e) {
-            if ($this->useTransaction) {
-                $pdo->rollBack();
-            }
             if ($isMysql) {
                 $this->enableForeignKeyChecksForMysql($pdo);
             }
