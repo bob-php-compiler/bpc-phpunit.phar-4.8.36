@@ -921,16 +921,19 @@ if (defined('__BPC__')) {
                 $typeDeclaration = '';
 
                 if (!$forCall) {
+                    $type       = $parameter->getType();
+                    $isArray    = $type && $type->getName() === 'array';
+                    $isCallable = $type && $type->getName() === 'callable';
                     if ($this->hasType($parameter)) {
                         $typeDeclaration = (string) $parameter->getType() . ' ';
-                    } elseif ($parameter->isArray()) {
+                    } elseif ($isArray) {
                         $typeDeclaration = 'array ';
                     } elseif ((defined('HHVM_VERSION') || version_compare(PHP_VERSION, '5.4.0', '>='))
-                              && $parameter->isCallable()) {
+                              && $isCallable) {
                         $typeDeclaration = 'callable ';
                     } else {
                         try {
-                            $class = $parameter->getClass();
+                            $class = $type && !$type->isBuiltin() ? new ReflectionClass($type->getName()) : null;
                         } catch (ReflectionException $e) {
                             throw new PHPUnit_Framework_MockObject_RuntimeException(
                                 sprintf(
