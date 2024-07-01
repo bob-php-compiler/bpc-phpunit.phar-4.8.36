@@ -824,7 +824,7 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
      *
      * @since  Method available since Release 3.1.0
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
         $iterator = new PHPUnit_Util_TestSuiteIterator($this);
 

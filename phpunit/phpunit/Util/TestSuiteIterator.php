@@ -86,7 +86,7 @@ class PHPUnit_Util_TestSuiteIterator implements RecursiveIterator
      *
      * @return PHPUnit_Util_TestSuiteIterator
      */
-    public function getChildren(): \RecursiveIterator
+    public function getChildren(): RecursiveIterator
     {
         return new self(
             $this->tests[$this->position]
